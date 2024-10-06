@@ -71,6 +71,7 @@ export default antfu(
       'style/multiline-ternary': 'off',
       'tailwindcss/migration-from-tailwind-2': 'off',
       'react-hooks/exhaustive-deps': 'off',
+      'react-refresh/only-export-components': 'off',
     },
   },
 );
