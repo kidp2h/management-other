@@ -2,8 +2,7 @@
 
 // Inspired by react-hot-toast library
 import * as React from 'react';
-import { useDispatch, useSelector, useStore } from 'react-redux';
-import type { AppDispatch, AppStore, RootState } from '@/lib/store';
+
 import type { ToastActionElement, ToastProps } from '@/components/ui/toast';
 
 const TOAST_LIMIT = 1;
@@ -192,8 +191,5 @@ function useToast() {
 }
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
-const useAppDispatch = useDispatch.withTypes<AppDispatch>();
-const useAppSelector = useSelector.withTypes<RootState>();
-const useAppStore = useStore.withTypes<AppStore>();
 
-export { toast, useToast, useAppDispatch, useAppSelector, useAppStore };
+export { toast, useToast };

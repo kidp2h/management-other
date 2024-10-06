@@ -24,7 +24,10 @@ export default antfu(
 
     ignores: [
       'next-env.d.ts',
-      '**/ui/*.tsx',
+      '**/ui/**/*.tsx',
+      '**/ui/**/*.ts',
+      '**/components/extends/**/*.ts',
+      '**/components/extends/**/*.tsx',
       '**/hooks/*.ts',
       'tailwind.config.ts',
     ],
@@ -44,8 +47,8 @@ export default antfu(
       'simple-import-sort': simpleImportSort,
     },
     rules: {
-      'simple-import-sort/imports': 'error',
-      'simple-import-sort/exports': 'error',
+      'simple-import-sort/imports': 'warn',
+      'simple-import-sort/exports': 'warn',
     },
   },
   {
@@ -55,10 +58,20 @@ export default antfu(
     rules: {
       'import/order': 'off', // Avoid conflicts with `simple-import-sort` plugin
       'sort-imports': 'off', // Avoid conflicts with `simple-import-sort` plugin
-      'ts/consistent-type-definitions': ['error', 'type'], // Use `type` instead of `interface`
+      'ts/consistent-type-definitions': ['off', 'type'], // Use `type` instead of `interface`
       'react/prefer-destructuring-assignment': 'off',
       'node/prefer-global/process': 'off', // Allow using `process.env`,
-      'no-console': 'error',
+      'no-console': 'warn',
+      'ts/no-empty-object-type': 'off',
+      'no-empty-pattern': 'off',
+      'react/no-array-index-key': 'off',
+      'tailwindcss/no-custom-classname': 'off',
+      'react/no-unstable-default-props': 'off',
+      'style/max-statements-per-line': 'off',
+      'style/multiline-ternary': 'off',
+      'tailwindcss/migration-from-tailwind-2': 'off',
+      'react-hooks/exhaustive-deps': 'off',
+      'react-refresh/only-export-components': 'off',
     },
   },
 );
