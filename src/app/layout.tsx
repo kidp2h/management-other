@@ -1,9 +1,16 @@
 import './globals.css';
+import 'dayjs/locale/vi';
 
+import { ClerkProvider } from '@clerk/nextjs';
+import dayjs from 'dayjs';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
+import Script from 'next/script';
 
-import { StoreProvider } from './StoreProvider';
+import { Toaster } from '@/components/ui/sonner';
+import { ThemeProvider } from '@/providers';
+import { GlobalStoreProvider } from '@/providers/global-store-provider';
+import { LoadingProvider } from '@/providers/loading-provider';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -20,18 +27,33 @@ export const metadata: Metadata = {
   title: 'App',
 };
 
+dayjs.locale('vi');
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <StoreProvider>{children}</StoreProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} relative min-h-screen antialiased`}
+        >
+          {/* <StoreProvider> */}
+          <GlobalStoreProvider>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+              <LoadingProvider>
+                {children}
+
+                <Toaster />
+              </LoadingProvider>
+            </ThemeProvider>
+          </GlobalStoreProvider>
+          {/* </StoreProvider> */}
+
+          <Script src="https://www.google.com/recaptcha/api.js" />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

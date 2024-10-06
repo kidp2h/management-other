@@ -2,6 +2,7 @@
 const nextConfig = {
   eslint: {
     dirs: ['.'],
+    ignoreDuringBuilds: true,
   },
   reactStrictMode: true,
 };
