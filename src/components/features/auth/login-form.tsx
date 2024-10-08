@@ -45,8 +45,7 @@ export const LoginForm = () => {
         router.push('/');
       }
       setLoading(false);
-    }
-    catch (err) {
+    } catch (err) {
       if (isClerkAPIResponseError(err)) {
         setErrors(err.errors);
       }
@@ -57,7 +56,10 @@ export const LoginForm = () => {
     if (errors) {
       switch (errors[0].code) {
         case ClerkCode.NOT_FOUND:
-          toast('Tài khoản không tồn tại', {
+          toast('Tài khoản không tồn tại');
+          break;
+        default:
+          toast('Mã cán bộ hoặc mật khẩu không đúng', {
             description: `${dayjs().format('h:mm A')}`,
             action: {
               label: 'Quên mật khẩu ?',
@@ -78,15 +80,14 @@ export const LoginForm = () => {
         await fetch('/api/captcha', {
           method: 'POST',
           headers: {
-            'Accept': 'application/json',
+            Accept: 'application/json',
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ token }),
         });
         setIsVerified(true);
       }
-    }
-    catch (e) {
+    } catch (e) {
       console.log(e);
       setIsVerified(false);
     }
@@ -97,8 +98,7 @@ export const LoginForm = () => {
       recaptchaRef.current?.reset();
       if (credential) {
         signInWithCode(loginSchema.parse(credential));
-      }
-      else {
+      } else {
         toast('Vui lòng nhập mã cán bộ và mật khẩu');
       }
     }
@@ -109,7 +109,7 @@ export const LoginForm = () => {
   };
   return (
     <AutoForm
-      onSubmit={(credential) => {
+      onSubmit={credential => {
         setLoading(true);
         setIsVerified(false);
         recaptchaRef.current?.execute();
