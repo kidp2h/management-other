@@ -31,22 +31,21 @@ export const LoginForm = () => {
     code,
     password,
   }: z.infer<typeof loginSchema>) => {
-    if (!isLoaded) {
-      return;
-    }
     try {
-      const result = await signIn.create({
+      console.log(isLoaded);
+      const result = await signIn?.create({
         identifier: code,
         password,
       });
       console.log(result);
-      if (result.status === 'complete') {
-        await setActive({ session: result.createdSessionId });
+      if (result && result.status === 'complete') {
+        await setActive?.({ session: result.createdSessionId });
 
         router.push('/');
       }
       setLoading(false);
     } catch (err) {
+      console.log(err);
       if (isClerkAPIResponseError(err)) {
         setErrors(err.errors);
       }
