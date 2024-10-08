@@ -1,16 +1,15 @@
 import { createBrowserClient } from '@supabase/ssr';
 
+import { env } from '@/../env.mjs';
+
 import type { Database } from './database.types';
 
 export function createClient() {
   try {
-    if (
-      process.env.NEXT_PUBLIC_SUPABASE_URL &&
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    ) {
+    if (env.NEXT_PUBLIC_SUPABASE_URL && env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
       return createBrowserClient<Database>(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        env.NEXT_PUBLIC_SUPABASE_URL!,
+        env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       );
     } else {
       throw new Error(

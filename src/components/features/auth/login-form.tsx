@@ -9,6 +9,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { toast } from 'sonner';
 import type { z } from 'zod';
 
+import { env } from '@/../env.mjs';
 import AutoForm, { AutoFormSubmit } from '@/components/ui/auto-form';
 import { loginSchema } from '@/lib/zod/schemas';
 import { useLoading } from '@/providers/loading-provider';
@@ -132,7 +133,7 @@ export const LoginForm = () => {
       }}
     >
       <ReCAPTCHA
-        sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
+        sitekey={env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
         ref={recaptchaRef}
         onChange={handleChange}
         size="invisible"
