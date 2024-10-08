@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export const env = createEnv({
   server: {
-    DATABASE_URL: z.string().url(),
+    DATABASE_URL: z.string().min(1),
     CLERK_SECRET_KEY: z.string().min(1),
     RECAPTCHA_SECRET_KEY: z.string().min(1),
   },
@@ -13,7 +13,7 @@ export const env = createEnv({
     NEXT_PUBLIC_CLERK_SIGN_IN_URL: z.string().min(1),
     NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: z.string().min(1),
     NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
-    NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
+    NEXT_PUBLIC_SUPABASE_URL: z.string().min(1),
   },
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,

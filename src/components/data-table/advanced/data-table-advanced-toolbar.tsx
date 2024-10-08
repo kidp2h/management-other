@@ -80,10 +80,7 @@ export function DataTableAdvancedToolbar<TData>({
       <div className="ml-auto flex items-center gap-2">
         {children}
         {(options.length > 0 && selectedOptions.length > 0) ||
-        openFilterBuilder ? //   variant="outline" // <Button
-        //   size="sm"
-        //   onClick={() => setOpenFilterBuilder(!openFilterBuilder)}
-        // >
+        openFilterBuilder ? // > //   onClick={() => setOpenFilterBuilder(!openFilterBuilder)} //   size="sm" //   variant="outline" // <Button
         //   <CaretSortIcon
         //     className="mr-2 size-4 shrink-0"
         //     aria-hidden="true"
