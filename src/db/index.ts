@@ -1,9 +1,11 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
+import { env } from '@/../env.mjs';
+
 import * as schema from './schema';
 
-const connectionString = process.env.DATABASE_URL;
+const connectionString = env.DATABASE_URL;
 
 if (!connectionString) {
   throw new Error('Missing env var: DATABASE_URL');
