@@ -16,7 +16,7 @@ import { useLoading } from '@/providers/loading-provider';
 import { ClerkCode } from '@/types';
 
 export const LoginForm = () => {
-  const { isLoaded, signIn, setActive } = useSignIn();
+  const { signIn, setActive } = useSignIn();
   const { setLoading } = useLoading();
   const [errors, setErrors] = React.useState<ClerkAPIError[]>();
 
@@ -32,12 +32,10 @@ export const LoginForm = () => {
     password,
   }: z.infer<typeof loginSchema>) => {
     try {
-      console.log(isLoaded);
       const result = await signIn?.create({
         identifier: code,
         password,
       });
-      console.log(result);
       if (result && result.status === 'complete') {
         await setActive?.({ session: result.createdSessionId });
 
@@ -45,7 +43,7 @@ export const LoginForm = () => {
       }
       setLoading(false);
     } catch (err) {
-      console.log(err);
+      console.error(err);
       if (isClerkAPIResponseError(err)) {
         setErrors(err.errors);
       }
@@ -63,7 +61,7 @@ export const LoginForm = () => {
             description: `${dayjs().format('h:mm A')}`,
             action: {
               label: 'Quên mật khẩu ?',
-              onClick: () => console.log('Undo'),
+              onClick: () => console.warn('forgot'),
             },
           });
           break;
@@ -74,7 +72,6 @@ export const LoginForm = () => {
     setIsVerified(false);
   }
   async function handleCaptchaSubmission(token: string | null) {
-    console.log(isVerified);
     try {
       if (token) {
         await fetch('/api/captcha', {
@@ -88,7 +85,7 @@ export const LoginForm = () => {
         setIsVerified(true);
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
       setIsVerified(false);
     }
   }
