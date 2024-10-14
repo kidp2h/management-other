@@ -5,48 +5,48 @@ import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 import randomatic from 'randomatic';
 
 import { db } from '@/db';
-import { ranks } from '@/db/schema';
+import { permissions } from '@/db/schema';
 import { takeFirstOrThrow } from '@/db/utils';
 import { getErrorMessage } from '@/lib/handle-error';
 import type {
-  CreateRankSchema,
-  UpdateRankSchema,
-} from '@/lib/zod/schemas/rank-schema';
+  CreatePermissionSchema,
+  UpdatePermissionSchema,
+} from '@/lib/zod/schemas/permission-schema';
 
-export async function createRank(input: CreateRankSchema) {
+export async function createPermission(input: CreatePermissionSchema) {
   noStore();
   try {
     // await db.transaction(async tx => {
     await db
-      .insert(ranks)
+      .insert(permissions)
       .values({
-        code: `RNK${randomatic('A0A', 10)}${new Date().getSeconds()}${new Date().getFullYear()}`,
+        code: `PMS${randomatic('A0A', 10)}${new Date().getSeconds()}${new Date().getFullYear()}`,
         name: input.name,
       })
       .returning({
-        id: ranks.id,
+        id: permissions.id,
       })
       .then(takeFirstOrThrow);
 
     // Delete a task to keep the total number of tasks constant
-    // await tx.delete(ranks).where(
+    // await tx.delete(permissions).where(
     //   eq(
-    //     ranks.id,
+    //     permissions.id,
     //     (
     //       await tx
     //         .select({
-    //           id: ranks.id,
+    //           id: permissions.id,
     //         })
-    //         .from(ranks)
+    //         .from(permissions)
     //         .limit(1)
-    //         .where(not(eq(ranks.id, newRank.id)))
-    //         .orderBy(asc(ranks.createdAt))
+    //         .where(not(eq(permissions.id, newPermission.id)))
+    //         .orderBy(asc(permissions.createdAt))
     //         .then(takeFirstOrThrow)
     //     ).id,
     //   ),
     // );;
 
-    revalidatePath('/ranks');
+    revalidatePath('/permissions');
 
     return {
       data: null,
@@ -60,11 +60,11 @@ export async function createRank(input: CreateRankSchema) {
   }
 }
 
-export async function deleteRank(input: { id: string }) {
+export async function deletePermission(input: { id: string }) {
   try {
-    await db.delete(ranks).where(eq(ranks.id, input.id));
+    await db.delete(permissions).where(eq(permissions.id, input.id));
 
-    revalidatePath('/ranks');
+    revalidatePath('/permissions');
   } catch (err) {
     return {
       data: null,
@@ -73,11 +73,11 @@ export async function deleteRank(input: { id: string }) {
   }
 }
 
-export async function deleteRanks(input: { ids: string[] }) {
+export async function deletePermissions(input: { ids: string[] }) {
   try {
-    await db.delete(ranks).where(inArray(ranks.id, input.ids));
+    await db.delete(permissions).where(inArray(permissions.id, input.ids));
 
-    revalidatePath('/ranks');
+    revalidatePath('/permissions');
 
     return {
       data: null,
@@ -91,17 +91,19 @@ export async function deleteRanks(input: { ids: string[] }) {
   }
 }
 
-export async function updateRank(input: UpdateRankSchema & { id: string }) {
+export async function updatePermission(
+  input: UpdatePermissionSchema & { id: string },
+) {
   noStore();
   try {
     await db
-      .update(ranks)
+      .update(permissions)
       .set({
         name: input.name,
       })
-      .where(eq(ranks.id, input.id));
+      .where(eq(permissions.id, input.id));
 
-    revalidatePath('/ranks');
+    revalidatePath('/permissions');
 
     return {
       data: null,

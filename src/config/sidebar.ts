@@ -36,8 +36,8 @@ export function getMenuList(pathname: string): Group[] {
               label: 'Quản lý hồ sơ CBCCVC',
             },
             {
-              href: '#',
-              label: '2',
+              href: '/users',
+              label: 'Quản lý tài khoản',
             },
             {
               href: '#',
@@ -88,12 +88,12 @@ export function getMenuList(pathname: string): Group[] {
               label: 'Quản lý đơn vị',
             },
             {
-              href: '/',
-              label: '1',
+              href: '/roles',
+              label: 'Quản lý vai trò',
             },
             {
-              href: '#',
-              label: '2',
+              href: '/permissions',
+              label: 'Quản lý quyền',
             },
             {
               href: '#',

@@ -16,11 +16,6 @@ export const getReligionsSchema = z.object({
 export type GetReligionsSchema = z.infer<typeof getReligionsSchema>;
 
 export const createReligionSchema = z.object({
-  code: z
-    .string({
-      required_error: 'Mã tôn giáo không được để trống',
-    })
-    .describe('Mã tôn giáo'),
   name: z
     .string({
       required_error: 'Tên tôn giáo không được để trống',

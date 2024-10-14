@@ -2,6 +2,7 @@
 
 import { eq, inArray } from 'drizzle-orm';
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
+import randomatic from 'randomatic';
 
 import { db } from '@/db';
 import { records } from '@/db/schema';
@@ -16,10 +17,10 @@ export async function createRecord(input: CreateRecordSchema) {
   noStore();
   try {
     // await db.transaction(async tx => {
-    await db
+    const data = await db
       .insert(records)
       .values({
-        code: input.code,
+        code: `R${randomatic('AA0A', 10)}${new Date().getSeconds()}${new Date().getFullYear()}`,
         fullName: input.fullName,
         religionId: input.religionId,
         birthday: input.birthday,
@@ -32,12 +33,13 @@ export async function createRecord(input: CreateRecordSchema) {
       })
       .returning({
         id: records.id,
+        code: records.code,
       })
       .then(takeFirstOrThrow);
     revalidatePath('/records');
 
     return {
-      data: null,
+      data,
       error: null,
     };
   } catch (err) {
@@ -85,7 +87,6 @@ export async function updateRecord(input: UpdateRecordSchema & { id: string }) {
     await db
       .update(records)
       .set({
-        code: input.code,
         fullName: input.fullName,
         religionId: input.religionId,
         birthday: input.birthday,

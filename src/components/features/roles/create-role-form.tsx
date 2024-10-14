@@ -3,35 +3,33 @@ import React, { useTransition } from 'react';
 import { toast } from 'sonner';
 
 import AutoForm, { AutoFormSubmit } from '@/components/ui/auto-form';
-import { createReligion } from '@/db/actions/religions';
-import { createReligionSchema } from '@/lib/zod/schemas/religion-schema';
+import { createRole } from '@/db/actions/roles';
+import { createRoleSchema } from '@/lib/zod/schemas/role-schema';
 
-export interface CreateReligionFormProps {
+export interface CreateRoleFormProps {
   onSuccess: () => void;
 }
-export default function CreateReligionForm({
-  onSuccess,
-}: CreateReligionFormProps) {
+export default function CreateRoleForm({ onSuccess }: CreateRoleFormProps) {
   const [isCreatePending, startCreateTransition] = useTransition();
   return (
     <AutoForm
       onSubmit={async values => {
         startCreateTransition(async () => {
-          const { error } = await createReligion(values);
+          const { error } = await createRole(values);
           if (error) {
             toast.error(error);
             return;
           }
           onSuccess();
-          toast.success('Tôn giáo đã được tạo');
+          toast.success('Vai trò đã được tạo');
         });
       }}
-      formSchema={createReligionSchema}
+      formSchema={createRoleSchema}
       fieldConfig={{
         name: {
           inputProps: {
             type: 'text',
-            placeholder: 'Tên tôn giáo',
+            placeholder: 'Tên vai trò',
           },
         },
       }}

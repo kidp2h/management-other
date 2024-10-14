@@ -5,48 +5,48 @@ import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 import randomatic from 'randomatic';
 
 import { db } from '@/db';
-import { ranks } from '@/db/schema';
+import { roles } from '@/db/schema';
 import { takeFirstOrThrow } from '@/db/utils';
 import { getErrorMessage } from '@/lib/handle-error';
 import type {
-  CreateRankSchema,
-  UpdateRankSchema,
-} from '@/lib/zod/schemas/rank-schema';
+  CreateRoleSchema,
+  UpdateRoleSchema,
+} from '@/lib/zod/schemas/role-schema';
 
-export async function createRank(input: CreateRankSchema) {
+export async function createRole(input: CreateRoleSchema) {
   noStore();
   try {
     // await db.transaction(async tx => {
     await db
-      .insert(ranks)
+      .insert(roles)
       .values({
-        code: `RNK${randomatic('A0A', 10)}${new Date().getSeconds()}${new Date().getFullYear()}`,
+        code: `RL${randomatic('A0A', 10)}${new Date().getSeconds()}${new Date().getFullYear()}`,
         name: input.name,
       })
       .returning({
-        id: ranks.id,
+        id: roles.id,
       })
       .then(takeFirstOrThrow);
 
     // Delete a task to keep the total number of tasks constant
-    // await tx.delete(ranks).where(
+    // await tx.delete(roles).where(
     //   eq(
-    //     ranks.id,
+    //     roles.id,
     //     (
     //       await tx
     //         .select({
-    //           id: ranks.id,
+    //           id: roles.id,
     //         })
-    //         .from(ranks)
+    //         .from(roles)
     //         .limit(1)
-    //         .where(not(eq(ranks.id, newRank.id)))
-    //         .orderBy(asc(ranks.createdAt))
+    //         .where(not(eq(roles.id, newRole.id)))
+    //         .orderBy(asc(roles.createdAt))
     //         .then(takeFirstOrThrow)
     //     ).id,
     //   ),
     // );;
 
-    revalidatePath('/ranks');
+    revalidatePath('/roles');
 
     return {
       data: null,
@@ -60,11 +60,11 @@ export async function createRank(input: CreateRankSchema) {
   }
 }
 
-export async function deleteRank(input: { id: string }) {
+export async function deleteRole(input: { id: string }) {
   try {
-    await db.delete(ranks).where(eq(ranks.id, input.id));
+    await db.delete(roles).where(eq(roles.id, input.id));
 
-    revalidatePath('/ranks');
+    revalidatePath('/roles');
   } catch (err) {
     return {
       data: null,
@@ -73,11 +73,11 @@ export async function deleteRank(input: { id: string }) {
   }
 }
 
-export async function deleteRanks(input: { ids: string[] }) {
+export async function deleteRoles(input: { ids: string[] }) {
   try {
-    await db.delete(ranks).where(inArray(ranks.id, input.ids));
+    await db.delete(roles).where(inArray(roles.id, input.ids));
 
-    revalidatePath('/ranks');
+    revalidatePath('/roles');
 
     return {
       data: null,
@@ -91,17 +91,17 @@ export async function deleteRanks(input: { ids: string[] }) {
   }
 }
 
-export async function updateRank(input: UpdateRankSchema & { id: string }) {
+export async function updateRole(input: UpdateRoleSchema & { id: string }) {
   noStore();
   try {
     await db
-      .update(ranks)
+      .update(roles)
       .set({
         name: input.name,
       })
-      .where(eq(ranks.id, input.id));
+      .where(eq(roles.id, input.id));
 
-    revalidatePath('/ranks');
+    revalidatePath('/roles');
 
     return {
       data: null,

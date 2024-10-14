@@ -14,8 +14,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { DeleteReligionsDialog } from './delete-religion-dialog';
-import UpdateReligionForm from './update-religion-form';
+import { DeletePermissionsDialog } from './delete-permission-dialog';
+import UpdatePermissionForm from './update-permission-form';
 
 export function getColumns(): ColumnDef<any>[] {
   return [
@@ -46,10 +46,10 @@ export function getColumns(): ColumnDef<any>[] {
     {
       accessorKey: 'code',
       meta: {
-        label: 'Mã tôn giáo',
+        label: 'Mã quyền',
       },
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Mã tôn giáo" />
+        <DataTableColumnHeader column={column} title="Mã quyền" />
       ),
       cell: ({ row }) => <div className="w-20">{row.getValue('code')}</div>,
       enableSorting: false,
@@ -58,10 +58,10 @@ export function getColumns(): ColumnDef<any>[] {
     {
       accessorKey: 'name',
       meta: {
-        label: 'Tên tôn giáo',
+        label: 'Tên quyền',
       },
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Tên tôn giáo" />
+        <DataTableColumnHeader column={column} title="Tên quyền" />
       ),
       cell: ({ row }) => <div className="w-20">{row.getValue('name')}</div>,
       enableSorting: false,
@@ -80,9 +80,9 @@ export function getColumns(): ColumnDef<any>[] {
     {
       id: 'actions',
       cell: function Cell({ row }) {
-        const [showUpdateReligionSheet, setShowUpdateReligionSheet] =
+        const [showUpdatePermissionSheet, setShowUpdatePermissionSheet] =
           React.useState(false);
-        const [showDeleteReligionDialog, setShowDeleteReligionDialog] =
+        const [showDeletePermissionDialog, setShowDeletePermissionDialog] =
           React.useState(false);
         React.useEffect(() => {
           // document.body.classList.remove('pointer-events-none');
@@ -90,11 +90,11 @@ export function getColumns(): ColumnDef<any>[] {
         return (
           <>
             <UpdateDataSheet
-              open={showUpdateReligionSheet}
-              onOpenChange={setShowUpdateReligionSheet}
+              open={showUpdatePermissionSheet}
+              onOpenChange={setShowUpdatePermissionSheet}
               data={row.original}
-              form={UpdateReligionForm}
-              name="tôn giáo"
+              form={UpdatePermissionForm}
+              name="quyền"
               fieldConfig={{
                 name: {
                   inputProps: {
@@ -104,11 +104,11 @@ export function getColumns(): ColumnDef<any>[] {
                 },
               }}
             />
-            <DeleteReligionsDialog
-              name="tôn giáo"
-              open={showDeleteReligionDialog}
-              onOpenChange={setShowDeleteReligionDialog}
-              religions={[row.original]}
+            <DeletePermissionsDialog
+              name="quyền"
+              open={showDeletePermissionDialog}
+              onOpenChange={setShowDeletePermissionDialog}
+              permissions={[row.original]}
               showTrigger={false}
               onSuccess={() => row.toggleSelected(false)}
             />
@@ -124,13 +124,13 @@ export function getColumns(): ColumnDef<any>[] {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
                 <DropdownMenuItem
-                  onSelect={() => setShowUpdateReligionSheet(true)}
+                  onSelect={() => setShowUpdatePermissionSheet(true)}
                 >
                   Sửa
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
-                  onSelect={() => setShowDeleteReligionDialog(true)}
+                  onSelect={() => setShowDeletePermissionDialog(true)}
                 >
                   Xoá
                   {/* <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut> */}

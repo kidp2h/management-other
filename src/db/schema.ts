@@ -62,25 +62,25 @@ export const records = pgTable('records', {
   id: uuid('id')
     .$default(() => uuidv4())
     .primaryKey(),
-  code: text('code').notNull(),
-  fullName: text('full_name').notNull(),
-  religionId: uuid('religion_id').notNull(),
-  birthday: timestamp('birthday').notNull(),
+  code: text('code').notNull().unique(),
+  fullName: text('full_name'),
+  religionId: uuid('religion_id'),
+  birthday: timestamp('birthday'),
 
   bloodType: text('blood_type', {
     enum: enumBloodType,
   }),
-  rankId: uuid('rank_id').notNull(),
+  rankId: uuid('rank_id'),
   englishCertification: text('english_certification', {
     enum: enumEnglishCertification,
   }),
   technologyCertification: text('technology_certification', {
     enum: enumTechnologyCertification,
   }),
-  isPartyMember: boolean('is_party_member').notNull(),
+  isPartyMember: boolean('is_party_member'),
   degree: text('degree', {
     enum: enumDegree,
-  }).notNull(),
+  }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at')
     .defaultNow()
@@ -89,7 +89,6 @@ export const records = pgTable('records', {
     })
     .notNull(),
 });
-
 export const recordsToLanguages = pgTable(
   'records_to_languages',
   {
@@ -128,14 +127,49 @@ export const recordsRelations = relations(records, ({ one, many }) => ({
   }),
   recordsToLanguages: many(recordsToLanguages),
 }));
-export const faculties = pgTable('faculties', {
+
+export const roles = pgTable('roles', {
   id: uuid('id')
     .$default(() => uuidv4())
     .primaryKey(),
-  name: text('name').notNull().unique(),
   code: text('code').notNull().unique(),
+  name: text('name').notNull().unique(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
+
+export const permissions = pgTable('permissions', {
+  id: uuid('id')
+    .$default(() => uuidv4())
+    .primaryKey(),
+  code: text('code').notNull().unique(),
+  name: text('name').notNull().unique(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export const rolePermissions = pgTable('role_permissions', {
+  roleId: uuid('role_id')
+    .references(() => roles.id)
+    .notNull(),
+  permissionId: uuid('permission_id')
+    .references(() => permissions.id)
+    .notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export const rolePermissionsRelations = relations(
+  rolePermissions,
+  ({ one }) => ({
+    role: one(roles, {
+      fields: [rolePermissions.roleId],
+      references: [roles.id],
+    }),
+    permission: one(permissions, {
+      fields: [rolePermissions.permissionId],
+      references: [permissions.id],
+    }),
+  }),
+);
+
 export const languagesRelations = relations(languages, ({ many }) => ({
   recordsToLanguages: many(recordsToLanguages),
 }));
@@ -147,18 +181,6 @@ export type Records = typeof records.$inferSelect;
 export type RecordsLanguages = typeof recordsToLanguages.$inferSelect;
 export type EnumDegree = typeof records.$inferSelect.degree;
 export type EnumBloodType = typeof records.$inferSelect.bloodType;
-
-// export enum Degree {
-//   CAO_DANG = 'Cao đẳng',
-//   DAI_HOC = 'Đại học',
-//   THAC_SI = 'Thạc sĩ',
-//   TIEN_SI = 'Tiến sĩ',
-//   GIAO_SU = 'Giáo sư',
-//   PHO_GIAO_SU = 'Phó giáo sư',
-// }
-// export enum BloodType {
-//   A = 'A',
-//   B = 'B',
-//   AB = 'AB',
-//   O = 'O',
-// }
+export type Roles = typeof roles.$inferSelect;
+export type Permissions = typeof permissions.$inferSelect;
+export type RolePermissions = typeof rolePermissions.$inferSelect;

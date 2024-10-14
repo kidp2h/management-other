@@ -1,5 +1,5 @@
 import { ReloadIcon } from '@radix-ui/react-icons';
-import { CaseUpper, Code } from 'lucide-react';
+import { CaseUpper } from 'lucide-react';
 import React, { useTransition } from 'react';
 import { toast } from 'sonner';
 
@@ -20,8 +20,8 @@ export default function CreateRecordForm({ onSuccess }: CreateRecordFormProps) {
         startCreateTransition(async () => {
           const { error } = await createRecord({
             ...values,
-            religionId: values.religionId.split('|')[0],
-            rankId: values.rankId.split('|')[0],
+            religionId: values.religionId?.split('|')[0],
+            rankId: values.rankId?.split('|')[0],
           });
           if (error) {
             toast.error(error);
@@ -36,9 +36,6 @@ export default function CreateRecordForm({ onSuccess }: CreateRecordFormProps) {
         ranks.map(r => `${r.id}|${r.name}`),
       )}
       fieldConfig={{
-        code: {
-          icon: Code,
-        },
         fullName: {
           icon: CaseUpper,
         },

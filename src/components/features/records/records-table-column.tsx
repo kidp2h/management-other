@@ -7,7 +7,6 @@ import {
   Building,
   Cake,
   CaseUpper,
-  Code,
   Cpu,
   Droplet,
   HeartPulse,
@@ -42,6 +41,7 @@ import { Switch } from '@/components/ui/switch';
 import { updateRecord } from '@/db/actions/records';
 import type { Ranks, Religions } from '@/db/schema';
 import { records } from '@/db/schema';
+import { cn } from '@/lib/utils';
 
 import { DeleteRecordsDialog } from './delete-record-dialog';
 import UpdateRecordForm from './update-record-form';
@@ -91,7 +91,7 @@ export function getColumns({
           <DataTableColumnHeader column={column} title="Mã hồ sơ" />
         </div>
       ),
-      cell: ({ row }) => <div className="w-20">{row.getValue('code')}</div>,
+      cell: ({ row }) => <div className="w-full">{row.getValue('code')}</div>,
       enableSorting: false,
       enableHiding: true,
     },
@@ -127,9 +127,12 @@ export function getColumns({
         <Badge
           roundedType="md"
           variant="outline"
-          className="bg-indigo-500 text-white"
+          className={cn(
+            ' text-white',
+            row.getValue('religion') ? 'bg-indigo-500' : 'bg-none',
+          )}
         >
-          {row.getValue('religion')}
+          {row.getValue('religion') || 'Chưa cập nhật'}
         </Badge>
       ),
       enableSorting: false,
@@ -151,9 +154,12 @@ export function getColumns({
           <Badge
             roundedType="md"
             variant="outline"
-            className="bg-green-500 text-white"
+            className={cn(
+              ' text-white',
+              row.getValue('rank') ? 'bg-green-500' : 'bg-none',
+            )}
           >
-            {row.getValue('rank')}
+            {row.getValue('rank') || 'Chưa cập nhật'}
           </Badge>
         </div>
       ),
@@ -191,10 +197,13 @@ export function getColumns({
       cell: ({ row }) => (
         <Badge
           roundedType="md"
-          variant="secondary"
-          className="bg-cyan-500 text-white"
+          variant="outline"
+          className={cn(
+            ' text-white',
+            row.getValue('englishCertification') ? 'bg-cyan-500' : 'bg-none',
+          )}
         >
-          {row.getValue('englishCertification')}
+          {row.getValue('englishCertification') || 'Chưa cập nhật'}
         </Badge>
       ),
       enableSorting: false,
@@ -214,10 +223,13 @@ export function getColumns({
       cell: ({ row }) => (
         <Badge
           roundedType="md"
-          variant="secondary"
-          className="bg-blue-500 text-white"
+          variant="outline"
+          className={cn(
+            ' text-white',
+            row.getValue('technologyCertification') ? 'bg-blue-500' : 'bg-none',
+          )}
         >
-          {row.getValue('technologyCertification')}
+          {row.getValue('technologyCertification') || 'Chưa cập nhật'}
         </Badge>
       ),
       enableSorting: false,
@@ -235,13 +247,16 @@ export function getColumns({
         </div>
       ),
       cell: ({ row }) => (
-        <div className="flex w-[6.25rem] items-center">
+        <div className="flex w-full items-center">
           <Badge
             roundedType="md"
-            variant="destructive"
-            className="bg-red-500 text-white"
+            variant="outline"
+            className={cn(
+              ' text-white',
+              row.getValue('bloodType') ? 'bg-red-500' : 'bg-none',
+            )}
           >
-            {row.getValue('bloodType')}
+            {row.getValue('bloodType') || 'Chưa cập nhật'}
           </Badge>
         </div>
       ),
@@ -331,14 +346,7 @@ export function getColumns({
                     ),
                   },
                 },
-                code: {
-                  inputProps: {
-                    type: 'text',
-                    placeholder: row.original.code,
-                    defaultValue: row.original.code,
-                  },
-                  icon: Code,
-                },
+
                 englishCertification: {
                   inputProps: {
                     placeholder: row.original.englishCertification,

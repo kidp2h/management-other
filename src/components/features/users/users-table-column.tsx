@@ -3,8 +3,8 @@ import type { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import {
   CircleUser,
+  FileText,
   History,
-  ImageIcon,
   Key,
   ShieldPlus,
   Timer,
@@ -57,39 +57,39 @@ export function getColumns(): ColumnDef<any, any>[] {
       enableSorting: false,
       enableHiding: true,
     },
+
     {
-      accessorKey: 'imageUrl',
+      accessorKey: 'publicMetadata.record.code',
       meta: {
-        label: 'Ảnh đại diện',
+        label: 'Hồ sơ',
       },
       header: ({ column }) => (
         <div className="flex flex-row items-center gap-1 ">
-          <ImageIcon className="mr-2 size-5 text-blue-500 " />
-          <DataTableColumnHeader column={column} title="Ảnh đại diện" />
+          <FileText className="mr-2 size-5 text-pink-500 " />
+          <DataTableColumnHeader column={column} title="Hồ sơ" />
         </div>
       ),
-      cell: ({}) => (
-        <div className="flex w-[6.25rem] items-center">
+      cell: ({ cell }) => (
+        <div className="flex w-full items-center">
           <Badge
-            variant="outline"
             roundedType="md"
-            className="cursor-pointer text-blue-500 underline"
+            variant={cell.getValue() ? 'default' : 'outline'}
+            className="flex w-full justify-center"
           >
-            Xem chi tiết
+            {cell.getValue() || 'Chưa có'}
           </Badge>
         </div>
       ),
     },
-
     {
       accessorKey: 'username',
       meta: {
-        label: 'Tài khoản',
+        label: 'Mã cán bộ',
       },
       header: ({ column }) => (
         <div className="flex flex-row items-center gap-1 ">
           <CircleUser className="mr-2 size-5 text-muted-foreground " />
-          <DataTableColumnHeader column={column} title="Tài khoản" />
+          <DataTableColumnHeader column={column} title="Mã cán bộ" />
         </div>
       ),
       cell: ({ cell }) => (
@@ -112,11 +112,12 @@ export function getColumns(): ColumnDef<any, any>[] {
       cell: ({ cell }) => (
         <div className="flex w-[6.25rem] items-center">
           <Badge roundedType="md" className="flex w-full justify-center">
-            {cell.getValue()}
+            {cell.getValue() || 'Chưa có'}
           </Badge>
         </div>
       ),
     },
+
     // {
     //   accessorKey: 'lastName',
     //   meta: {

@@ -2,6 +2,7 @@
 
 import { eq, inArray } from 'drizzle-orm';
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
+import randomatic from 'randomatic';
 
 import { db } from '@/db';
 import { religions } from '@/db/schema';
@@ -19,7 +20,7 @@ export async function createReligion(input: CreateReligionSchema) {
     await db
       .insert(religions)
       .values({
-        code: input.code,
+        code: `RLG${randomatic('AA0A', 10)}${new Date().getSeconds()}${new Date().getFullYear()}`,
         name: input.name,
       })
       .returning({
@@ -98,7 +99,6 @@ export async function updateReligion(
     await db
       .update(religions)
       .set({
-        code: input.code,
         name: input.name,
       })
       .where(eq(religions.id, input.id));
