@@ -1,10 +1,4 @@
-import {
-  Bookmark,
-  ChartBar,
-  LayoutGrid,
-  Newspaper,
-  Settings,
-} from 'lucide-react';
+import { Bookmark, LayoutGrid, Newspaper } from 'lucide-react';
 
 import type { Group } from '@/components/common/sidebar/menu';
 
@@ -23,69 +17,37 @@ export function getMenuList(pathname: string): Group[] {
       ],
     },
     {
-      groupLabel: 'Quản lý',
+      groupLabel: 'Đơn',
       menus: [
         {
-          href: '/records',
-          label: 'Quản lý hồ sơ',
-          active: pathname.includes('/records'),
+          href: '#',
+          label: 'Tiếp dân',
+          active: pathname.includes('/reception'),
           icon: Newspaper,
           submenus: [
             {
-              href: '/records',
-              label: 'Quản lý hồ sơ CBCCVC',
-            },
-            {
-              href: '/users',
-              label: 'Quản lý tài khoản',
-            },
-            {
-              href: '#',
-              label: '3',
-            },
-            {
-              href: '#',
-              label: '4',
-            },
-            {
-              href: '#',
-              label: '1',
-            },
-            {
-              href: '#',
-              label: '2',
-            },
-            {
-              href: '#',
-              label: '3',
-            },
-            {
-              href: '#',
-              label: '4',
+              href: '/reception',
+              label: 'Tiếp dân thường xuyên',
             },
           ],
         },
         {
-          href: '/categories',
-          label: 'Quản lý danh mục',
-          active: pathname.includes('/categories'),
+          href: '#',
+          label: 'Quản lý',
+          active:
+            pathname.includes('/applications') ||
+            pathname.includes('/users') ||
+            pathname.includes('/roles') ||
+            pathname.includes('/permissions'),
           icon: Bookmark,
           submenus: [
             {
-              href: '/religions',
-              label: 'Tôn giáo',
+              href: '/applications',
+              label: 'Quản lý đơn',
             },
             {
-              href: '/languages',
-              label: 'Ngôn ngữ',
-            },
-            {
-              href: '/ranks',
-              label: 'Cấp bậc',
-            },
-            {
-              href: '/departments',
-              label: 'Quản lý đơn vị',
+              href: '/users',
+              label: 'Quản lý tài khoản',
             },
             {
               href: '/roles',
@@ -95,37 +57,7 @@ export function getMenuList(pathname: string): Group[] {
               href: '/permissions',
               label: 'Quản lý quyền',
             },
-            {
-              href: '#',
-              label: '3',
-            },
-            {
-              href: '#',
-              label: '4',
-            },
           ],
-        },
-      ],
-    },
-    {
-      groupLabel: 'Thống kê',
-      menus: [
-        {
-          href: '/reports',
-          label: 'Báo cáo',
-          active: pathname.includes('/reports'),
-          icon: ChartBar,
-        },
-      ],
-    },
-    {
-      groupLabel: 'Thống kê',
-      menus: [
-        {
-          href: '/settings',
-          label: 'Cài đặt',
-          active: pathname.includes('/settings'),
-          icon: Settings,
         },
       ],
     },

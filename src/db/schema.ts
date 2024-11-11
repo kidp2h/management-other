@@ -1,132 +1,8 @@
-import { relations } from 'drizzle-orm';
-import {
-  boolean,
-  pgTable,
-  primaryKey,
-  text,
-  timestamp,
-  uuid,
-} from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import { pgTable, text, timestamp, unique, uuid } from 'drizzle-orm/pg-core';
 import { v4 as uuidv4 } from 'uuid';
 
-export const enumBloodType: [string, ...string[]] = ['A', 'B', 'AB', 'O'];
-export const enumDegree: [string, ...string[]] = [
-  'Cao đẳng',
-  'Đại học',
-  'Thạc sĩ',
-  'Tiến sĩ',
-  'Giáo sư',
-  'Phó giáo sư',
-];
-export const enumEnglishCertification: [string, ...string[]] = [
-  'A1',
-  'A2',
-  'B1',
-  'B2',
-  'C1',
-  'C2',
-];
-export const enumTechnologyCertification: [string, ...string[]] = [
-  'A',
-  'B',
-  'C',
-];
-
-export const religions = pgTable('religions', {
-  id: uuid('id')
-    .$default(() => uuidv4())
-    .primaryKey(),
-  code: text('code').notNull().unique(),
-  name: text('name').notNull().unique(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-});
-
-export const ranks = pgTable('ranks', {
-  id: uuid('id')
-    .$default(() => uuidv4())
-    .primaryKey(),
-  name: text('name').notNull().unique(),
-  code: text('code').notNull().unique(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-});
-export const languages = pgTable('languages', {
-  id: uuid('id')
-    .$default(() => uuidv4())
-    .primaryKey(),
-  code: text('code').notNull().unique(),
-  name: text('name').notNull().unique(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-});
-
-export const records = pgTable('records', {
-  id: uuid('id')
-    .$default(() => uuidv4())
-    .primaryKey(),
-  code: text('code').notNull().unique(),
-  fullName: text('full_name'),
-  religionId: uuid('religion_id'),
-  birthday: timestamp('birthday'),
-
-  bloodType: text('blood_type', {
-    enum: enumBloodType,
-  }),
-  rankId: uuid('rank_id'),
-  englishCertification: text('english_certification', {
-    enum: enumEnglishCertification,
-  }),
-  technologyCertification: text('technology_certification', {
-    enum: enumTechnologyCertification,
-  }),
-  isPartyMember: boolean('is_party_member'),
-  degree: text('degree', {
-    enum: enumDegree,
-  }),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at')
-    .defaultNow()
-    .$onUpdateFn(() => {
-      return new Date();
-    })
-    .notNull(),
-});
-export const recordsToLanguages = pgTable(
-  'records_to_languages',
-  {
-    recordId: uuid('record_id')
-      .notNull()
-      .references(() => records.id),
-    languageId: uuid('language_id')
-      .notNull()
-      .references(() => languages.id),
-  },
-  t => ({
-    pk: primaryKey({ columns: [t.recordId, t.languageId] }),
-  }),
-);
-export const recordsToLanguagesRelations = relations(
-  recordsToLanguages,
-  ({ one }) => ({
-    records: one(records, {
-      fields: [recordsToLanguages.recordId],
-      references: [records.id],
-    }),
-    languages: one(languages, {
-      fields: [recordsToLanguages.languageId],
-      references: [languages.id],
-    }),
-  }),
-);
-export const recordsRelations = relations(records, ({ one, many }) => ({
-  religion: one(religions, {
-    fields: [records.religionId],
-    references: [religions.id],
-  }),
-  rank: one(ranks, {
-    fields: [records.rankId],
-    references: [ranks.id],
-  }),
-  recordsToLanguages: many(recordsToLanguages),
-}));
+import { ethnicities } from '@/lib/zod/schemas/application-schema';
 
 export const roles = pgTable('roles', {
   id: uuid('id')
@@ -137,50 +13,88 @@ export const roles = pgTable('roles', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-export const permissions = pgTable('permissions', {
-  id: uuid('id')
-    .$default(() => uuidv4())
-    .primaryKey(),
-  code: text('code').notNull().unique(),
-  name: text('name').notNull().unique(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-});
-
-export const rolePermissions = pgTable('role_permissions', {
-  roleId: uuid('role_id')
-    .references(() => roles.id)
-    .notNull(),
-  permissionId: uuid('permission_id')
-    .references(() => permissions.id)
-    .notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-});
-
-export const rolePermissionsRelations = relations(
-  rolePermissions,
-  ({ one }) => ({
-    role: one(roles, {
-      fields: [rolePermissions.roleId],
-      references: [roles.id],
-    }),
-    permission: one(permissions, {
-      fields: [rolePermissions.permissionId],
-      references: [permissions.id],
-    }),
+export const applications = pgTable(
+  'applications',
+  {
+    id: uuid('id')
+      .$default(() => uuidv4())
+      .primaryKey(),
+    objectsOfApplication: text('objects_of_application').notNull(),
+    code: text('code').notNull().unique(),
+    fullName: text('full_name').notNull(),
+    email: text('email').notNull(),
+    identityCard: text('identity_card').notNull(),
+    issueDate: timestamp('issue_date').notNull(),
+    placeOfIssue: text('place_of_issue').notNull(),
+    gender: text('gender').notNull(),
+    phoneNumber: text('phone_number').notNull(),
+    ethnicity: text('ethnicity', {
+      enum: ethnicities,
+    }).notNull(),
+    address: text('address').notNull(),
+    province: text('province').notNull(),
+    district: text('district').notNull(),
+    ward: text('ward').notNull(),
+    fieldOfApplication: text('field_of_application').notNull(),
+    national: text('national').notNull(),
+    occupation: text('occupation').notNull(),
+    kindOfApplication: text('kind_of_application').notNull(),
+    provinceOfIncidentOccured: text('province_of_incident_occured').notNull(),
+    districtOfIncidentOccured: text('district_of_incident_occured').notNull(),
+    wardOfIncidentOccured: text('ward_of_incident_occured').notNull(),
+    addressOfIncidentOccured: text('address_of_incident_occured').notNull(),
+    content: text('content').notNull(),
+    contentDetail: text('content_detail').notNull(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .notNull()
+      .$defaultFn(() => {
+        return new Date();
+      }),
+    files: text('files')
+      .array()
+      .notNull()
+      .default(sql`ARRAY[]::text[]`),
+    receptionistId: text('receptionist_id'),
+    acceptorId: text('acceptor_id'),
+    researcherId: text('researcher_id'),
+    reporterId: text('reporter_id'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    status: text('status', {
+      enum: ['PENDING', 'REPORTED', 'RESEARCHING', 'COMPLETED'],
+    })
+      .default('PENDING')
+      .notNull(),
+  },
+  t => ({
+    unq: unique('unq').on(
+      t.identityCard,
+      t.kindOfApplication,
+      t.fieldOfApplication,
+    ),
   }),
 );
 
-export const languagesRelations = relations(languages, ({ many }) => ({
-  recordsToLanguages: many(recordsToLanguages),
-}));
+// export const applicationsApproval = pgTable('applications_approval', {
+//   id: uuid('id')
+//     .$default(() => uuidv4())
+//     .primaryKey(),
+//   applicationId: uuid('application_id')
+//     .references(() => applications.id)
+//     .notNull(),
+//   userId: text('user_id').notNull(),
+//   status: text('status', {
+//     enum: ['PENDING', 'ACCEPTED', 'REPORTED', 'RESEARCHING'],
+//   }).notNull(),
 
-export type Religions = typeof religions.$inferSelect;
-export type Languages = typeof languages.$inferSelect;
-export type Ranks = typeof ranks.$inferSelect;
-export type Records = typeof records.$inferSelect;
-export type RecordsLanguages = typeof recordsToLanguages.$inferSelect;
-export type EnumDegree = typeof records.$inferSelect.degree;
-export type EnumBloodType = typeof records.$inferSelect.bloodType;
+//   updatedAt: timestamp('updated_at')
+//     .defaultNow()
+//     .notNull()
+//     .$defaultFn(() => {
+//       return new Date();
+//     }),
+//   createdAt: timestamp('created_at').defaultNow().notNull(),
+// });
+
 export type Roles = typeof roles.$inferSelect;
-export type Permissions = typeof permissions.$inferSelect;
-export type RolePermissions = typeof rolePermissions.$inferSelect;
+export type Applications = typeof applications.$inferSelect;

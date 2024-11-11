@@ -6,7 +6,7 @@ const isPublicRoute = createRouteMatcher([
   '/api/captcha(.*)',
   '/users',
   '/users/(.*)',
-  '/',
+  '/api/uploadthing',
 ]);
 
 export default clerkMiddleware(

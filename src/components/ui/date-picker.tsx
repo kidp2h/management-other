@@ -12,12 +12,13 @@ import {
 } from '@/components/ui/popover';
 import { forwardRef } from 'react';
 import dayjs from 'dayjs';
+import { FormControl } from './form';
 
 export const DatePicker = forwardRef<
   HTMLDivElement,
   {
     date?: Date;
-    setDate: (date?: Date) => void;
+    setDate?: (date?: Date) => void;
     placeholder: string;
   }
 >(function DatePickerCmp({ date, setDate, placeholder }, ref) {

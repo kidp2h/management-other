@@ -2,31 +2,49 @@
 import { clerkClient, type User } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
 
-import { createRecord } from '@/db/actions/records';
 import type {
   CreateUserSchema,
   UpdateUserSchema,
 } from '@/lib/zod/schemas/user-schema';
 
-export const createUser = async (input: CreateUserSchema) => {
+export const getUserById = async (id: string | null) => {
   try {
-    const record = await createRecord({
-      fullName: input.fullName,
-      birthday: input.birthday,
-    });
+    if (id === null)
+      return {
+        data: null,
+        error: null,
+      };
+    const data = await clerkClient().users.getUser(id);
+    if (data) {
+      return {
+        data,
+        error: null,
+      };
+    }
+  } catch (error) {
+    return {
+      data: null,
+      error,
+    };
+  }
+};
+
+export const createUser = async (
+  input: Partial<CreateUserSchema> & { metadata?: Record<string, string> },
+) => {
+  try {
     const data = await clerkClient().users.createUser({
       username: input.username,
       password: input.password,
+      firstName: input.firstName,
+      lastName: input.lastName,
+
       publicMetadata: {
-        role: null,
-        record: {
-          id: record.data?.id,
-          code: record.data?.code,
-        },
+        ...input.metadata,
       },
     });
 
-    if (data && record.error === null) {
+    if (data) {
       revalidatePath('/users');
       return {
         data: null,
@@ -34,6 +52,7 @@ export const createUser = async (input: CreateUserSchema) => {
       };
     }
   } catch (error) {
+    console.log(error);
     return {
       data: null,
       error,
@@ -81,23 +100,49 @@ export const deleteUsers = async (input: { ids: string[] }) => {
   }
 };
 
-export const updateUser = async (input: UpdateUserSchema & { id: string }) => {
+export const updateUser = async (
+  input: Partial<UpdateUserSchema> & {
+    id: string;
+    metadata?: Record<string, string>;
+  },
+) => {
   try {
-    const newData = {} as Record<string, string>;
-    if (input.username) newData.username = input.username;
-    if (input.password) newData.password = input.password;
-    if (Object.keys(newData).length === 0) {
+    // const newData = {} as Record<string, string>;
+    // if (input.username) newData.username = input.username;
+    // if (input.password) newData.password = input.password;
+    const data = await clerkClient().users.updateUser(input.id, {
+      ...input,
+      publicMetadata: {
+        ...input.metadata,
+      },
+      skipPasswordChecks: true,
+    });
+
+    if (data) {
+      revalidatePath('/users');
       return {
         data: null,
         error: null,
       };
     }
-    const data = await clerkClient().users.updateUser(input.id, {
-      ...newData,
-      skipPasswordChecks: true,
-    });
-    console.log('hih', data);
+  } catch (error) {
+    return {
+      data: null,
+      error,
+    };
+  }
+};
 
+export const updateMetadataUser = async (
+  id: string,
+  metadata: Record<string, any>,
+) => {
+  try {
+    const data = await clerkClient().users.updateUserMetadata(id, {
+      publicMetadata: {
+        ...metadata,
+      },
+    });
     if (data) {
       revalidatePath('/users');
       return {

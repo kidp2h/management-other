@@ -27,19 +27,27 @@ import {
 import { useMediaQuery } from '@/hooks/use-media-query';
 
 export interface CreateDataDialogProps {
-  form: ({ onSuccess }: { onSuccess: () => void }) => JSX.Element;
+  form: ({
+    onSuccess,
+    isDialog,
+  }: {
+    onSuccess: () => void;
+    isDialog?: boolean;
+  }) => JSX.Element;
   name: string;
+  drawer?: boolean;
   description: string;
 }
 export function CreateDataDialog({
   form: FormCreate,
   name,
   description,
+  drawer = true,
 }: CreateDataDialogProps) {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery('(min-width: 640px)');
 
-  if (isDesktop)
+  if (isDesktop || !drawer)
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
@@ -57,6 +65,7 @@ export function CreateDataDialog({
             onSuccess={() => {
               setOpen(false);
             }}
+            isDialog
           />
           <DialogFooter className="w-full">
             <DialogClose asChild>

@@ -60,6 +60,16 @@ export async function createRole(input: CreateRoleSchema) {
   }
 }
 
+export async function getAllRoles() {
+  try {
+    const data = await db.select().from(roles);
+    return { data };
+  } catch (error) {
+    console.error('Error getting roles:', error);
+    return { data: null };
+  }
+}
+
 export async function deleteRole(input: { id: string }) {
   try {
     await db.delete(roles).where(eq(roles.id, input.id));

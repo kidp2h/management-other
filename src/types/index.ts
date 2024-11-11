@@ -1,4 +1,5 @@
 import type { SQL } from 'drizzle-orm';
+import type { ClientUploadedFileData } from 'uploadthing/types';
 
 import type { DataTableConfig } from '@/config/data-table';
 
@@ -47,3 +48,11 @@ export type DrizzleWhere<T> =
   | SQL<unknown>
   | ((aliases: T) => SQL<T> | undefined)
   | undefined;
+
+export enum Role {
+  RECEPTIONIST = 'RECEPTIONIST',
+  PROSECUTOR = 'PROSECUTOR',
+  LEADER = 'LEADER',
+}
+
+export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {}

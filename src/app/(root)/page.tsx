@@ -1,17 +1,42 @@
-import AutoBreadcrumb from '@/components/common/auto-breadcrumb';
-import MainContent from '@/components/common/main-content';
-import { ContentLayout } from '@/layouts';
+import DashboardSection from '@/components/features/dashboard/dashboard-section';
+import {
+  getApplicationsRecent3Months,
+  getApplicationsRecent6Months,
+  getApplicationsRecent7Days,
+  getCountAllApplications,
+  getCountAllApplicationsByStatus,
+} from '@/db/actions/applications';
 
 export default async function DashboardPage() {
-  const items = [
-    { name: 'Trang chủ', href: '/' },
-    { isSeparator: true },
-    { name: 'Bảng điều khiển' },
-  ];
+  const [
+    countApplications,
+    countApplicationsReported,
+    countApplicationsResearching,
+    countApplicationsCompleted,
+    applicationsRecent3Months,
+    applicationsRecent7Days,
+    applicationsRecent6Months,
+  ] = await Promise.all([
+    getCountAllApplications(),
+    getCountAllApplicationsByStatus('REPORTED'),
+    getCountAllApplicationsByStatus('RESEARCHING'),
+    getCountAllApplicationsByStatus('COMPLETED'),
+    getApplicationsRecent3Months(),
+    getApplicationsRecent7Days(),
+    getApplicationsRecent6Months(),
+  ]);
+
   return (
-    <ContentLayout title="Bảng điều khiển">
-      <AutoBreadcrumb items={items} />
-      <MainContent>x</MainContent>
-    </ContentLayout>
+    <DashboardSection
+      data={{
+        countApplications,
+        countApplicationsReported,
+        countApplicationsResearching,
+        countApplicationsCompleted,
+        applicationsRecent3Months,
+        applicationsRecent7Days,
+        applicationsRecent6Months,
+      }}
+    />
   );
 }

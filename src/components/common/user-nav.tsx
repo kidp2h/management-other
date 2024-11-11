@@ -20,6 +20,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { useLoading } from '@/providers/loading-provider';
 
 import AccountSection from '../features/account/account-section';
 import {
@@ -35,6 +36,13 @@ import { Skeleton } from '../ui/skeleton';
 export function UserNav() {
   const { signOut } = useClerk();
   const { user, isLoaded } = useUser();
+  const { setLoading } = useLoading();
+
+  const signOutHandle = async () => {
+    setLoading(true);
+    await signOut({ redirectUrl: '/auth' });
+    setLoading(false);
+  };
   return (
     <Sheet>
       <SheetContent className="w-full overflow-y-auto ">
@@ -73,10 +81,10 @@ export function UserNav() {
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
               <p className="text-sm font-medium leading-none">
-                {!isLoaded || !user?.fullName ? (
+                {!isLoaded || !user?.username ? (
                   <Skeleton className="mb-2 h-3 w-full" />
                 ) : (
-                  user?.fullName
+                  user?.username
                 )}
               </p>
             </div>
@@ -93,7 +101,7 @@ export function UserNav() {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="hover:cursor-pointer"
-            onClick={() => signOut({ redirectUrl: '/auth' })}
+            onClick={() => signOutHandle()}
           >
             <LogOut className="mr-3 size-4 text-muted-foreground" />
             Đăng xuất

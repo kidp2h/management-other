@@ -11,7 +11,6 @@ type RecordsManagementPageProps = {
 export default async function UsersManagementPage({
   searchParams,
 }: RecordsManagementPageProps) {
-  console.log(searchParams);
   const username =
     typeof searchParams.username === 'string'
       ? searchParams.username?.split('~')[0]

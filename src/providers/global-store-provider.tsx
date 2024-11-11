@@ -16,7 +16,8 @@ export type GlobalStoreApi = ReturnType<typeof createGlobalStore>;
 export const GlobalStoreProvider = ({ children }: GlobalStoreProviderProps) => {
   const storeRef = useRef<GlobalStoreApi>();
   if (!storeRef.current) {
-    storeRef.current = createGlobalStore();
+    const store = createGlobalStore();
+    storeRef.current = store;
   }
   return (
     <GlobalStoreContext.Provider value={storeRef.current}>

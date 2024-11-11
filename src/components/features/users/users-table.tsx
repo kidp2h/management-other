@@ -43,7 +43,6 @@ export const UsersTable = ({ users, pageCount }: UsersTableProps) => {
     shallow: false,
     clearOnDefault: true,
   });
-  console.log(users);
   // console.log(table);
   return (
     <DataTable table={table}>

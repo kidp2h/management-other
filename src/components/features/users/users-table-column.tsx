@@ -3,14 +3,16 @@ import type { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import {
   CircleUser,
-  FileText,
   History,
   Key,
   ShieldPlus,
+  Star,
   Timer,
+  TypeOutline,
   UserCircle,
 } from 'lucide-react';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { toast } from 'sonner';
 
 import { UpdateDataSheet } from '@/components/common/update-data-sheet';
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header';
@@ -22,9 +24,16 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { updateMetadataUser } from '@/lib/clerk';
+import { useGlobalStore } from '@/providers/global-store-provider';
 
 import { DeleteUsersDialog } from './delete-user-dialog';
 import UpdateUserForm from './update-user-form';
@@ -59,29 +68,6 @@ export function getColumns(): ColumnDef<any, any>[] {
     },
 
     {
-      accessorKey: 'publicMetadata.record.code',
-      meta: {
-        label: 'Hồ sơ',
-      },
-      header: ({ column }) => (
-        <div className="flex flex-row items-center gap-1 ">
-          <FileText className="mr-2 size-5 text-pink-500 " />
-          <DataTableColumnHeader column={column} title="Hồ sơ" />
-        </div>
-      ),
-      cell: ({ cell }) => (
-        <div className="flex w-full items-center">
-          <Badge
-            roundedType="md"
-            variant={cell.getValue() ? 'default' : 'outline'}
-            className="flex w-full justify-center"
-          >
-            {cell.getValue() || 'Chưa có'}
-          </Badge>
-        </div>
-      ),
-    },
-    {
       accessorKey: 'username',
       meta: {
         label: 'Mã cán bộ',
@@ -93,13 +79,30 @@ export function getColumns(): ColumnDef<any, any>[] {
         </div>
       ),
       cell: ({ cell }) => (
-        <div className="flex w-[6.25rem] items-center">
+        <div className="flex w-full items-center">
           <span>{cell.getValue()}</span>
         </div>
       ),
     },
     {
-      accessorKey: 'publicMetadata.role',
+      accessorKey: 'publicMetadata.fullName',
+      meta: {
+        label: 'Họ và tên',
+      },
+      header: ({ column }) => (
+        <div className="flex flex-row items-center gap-1 ">
+          <TypeOutline className="mr-2 size-5 text-muted-foreground " />
+          <DataTableColumnHeader column={column} title="Họ và tên" />
+        </div>
+      ),
+      cell: ({ cell }) => (
+        <div className="flex w-full items-center">
+          <Badge>{cell.getValue() || 'Chưa có thông tin'}</Badge>
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'publicMetadata.roleName',
       meta: {
         label: 'Vai trò',
       },
@@ -205,7 +208,11 @@ export function getColumns(): ColumnDef<any, any>[] {
         const [showDeleteUserDialog, setShowDeleteUserDialog] =
           React.useState(false);
         React.useEffect(() => {});
-        // const [isUpdatePending, startUpdateTransition] = React.useTransition();
+        const [isUpdatePending, startUpdateTransition] = React.useTransition();
+        const { fetchRoles, roles } = useGlobalStore(state => state);
+        useEffect(() => {
+          fetchRoles();
+        }, [fetchRoles]);
         return (
           <>
             <UpdateDataSheet<any>
@@ -232,7 +239,7 @@ export function getColumns(): ColumnDef<any, any>[] {
               }}
             />
             <DeleteUsersDialog
-              name="tôn giáo"
+              name="tài khoản"
               open={showDeleteUserDialog}
               onOpenChange={setShowDeleteUserDialog}
               users={[row.original]}
@@ -268,53 +275,8 @@ export function getColumns(): ColumnDef<any, any>[] {
                   Chỉnh sửa nhanh
                 </DropdownMenuLabel>
 
-                {/* <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>Tiếng Anh</DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent>
-                    <DropdownMenuRadioGroup
-                      value={row.original.label}
-                      onValueChange={value => {
-                        startUpdateTransition(() => {
-                          if (value) {
-                            toast.promise(
-                              updateUser({
-                                id: row.original.id,
-                                englishCertification: value,
-                              }),
-                              {
-                                loading: 'Đang cập nhật...',
-                                success: 'Cập nhật thành công',
-                                error: 'Cập nhật thất bại',
-                              },
-                            );
-                          }
-                        });
-                      }}
-                    >
-                      {users.englishCertification.enumValues.map(
-                        (label: string) => (
-                          <DropdownMenuRadioItem
-                            key={label}
-                            value={label}
-                            disabled={
-                              isUpdatePending ||
-                              label === row.original.englishCertification
-                            }
-                          >
-                            <div className="flex flex-row items-center justify-center gap-2">
-                              {label}
-                              {label === row.original.englishCertification && (
-                                <Star className="size-4" />
-                              )}
-                            </div>
-                          </DropdownMenuRadioItem>
-                        ),
-                      )}
-                    </DropdownMenuRadioGroup>
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
                 <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>Tin học</DropdownMenuSubTrigger>
+                  <DropdownMenuSubTrigger>Vai trò</DropdownMenuSubTrigger>
                   <DropdownMenuSubContent>
                     <DropdownMenuRadioGroup
                       value={row.original.label}
@@ -322,9 +284,10 @@ export function getColumns(): ColumnDef<any, any>[] {
                         startUpdateTransition(() => {
                           if (value) {
                             toast.promise(
-                              updateUser({
-                                id: row.original.id,
-                                technologyCertification: value,
+                              updateMetadataUser(row.original.id, {
+                                roleId: value,
+                                roleName: roles.find(role => role.id === value)
+                                  ?.name,
                               }),
                               {
                                 loading: 'Đang cập nhật...',
@@ -336,64 +299,17 @@ export function getColumns(): ColumnDef<any, any>[] {
                         });
                       }}
                     >
-                      {users.technologyCertification.enumValues.map(
-                        (label: string) => (
-                          <DropdownMenuRadioItem
-                            key={label}
-                            value={label}
-                            disabled={
-                              isUpdatePending ||
-                              label === row.original.technologyCertification
-                            }
-                          >
-                            <div className="flex flex-row items-center justify-center gap-2">
-                              {label}
-                              {label ===
-                                row.original.technologyCertification && (
-                                <Star className="size-4" />
-                              )}
-                            </div>
-                          </DropdownMenuRadioItem>
-                        ),
-                      )}
-                    </DropdownMenuRadioGroup>
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>Tôn giáo</DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent>
-                    <DropdownMenuRadioGroup
-                      value={row.original.label}
-                      onValueChange={value => {
-                        startUpdateTransition(() => {
-                          if (value) {
-                            toast.promise(
-                              updateUser({
-                                id: row.original.id,
-                                religionId: value,
-                              }),
-                              {
-                                loading: 'Đang cập nhật...',
-                                success: 'Cập nhật thành công',
-                                error: 'Cập nhật thất bại',
-                              },
-                            );
-                          }
-                        });
-                      }}
-                    >
-                      {religions.map(rel => (
+                      {roles.map(role => (
                         <DropdownMenuRadioItem
-                          key={rel.id}
-                          value={rel.id}
+                          key={role.id}
+                          value={role.id}
                           disabled={
-                            isUpdatePending ||
-                            rel.id === row.original.religionId
+                            isUpdatePending || role.name === row.original.role
                           }
                         >
                           <div className="flex flex-row items-center justify-center gap-2">
-                            {rel.name}
-                            {rel.id === row.original.religionId && (
+                            {role.name}
+                            {role.name === row.original.role && (
                               <Star className="size-4" />
                             )}
                           </div>
@@ -402,48 +318,6 @@ export function getColumns(): ColumnDef<any, any>[] {
                     </DropdownMenuRadioGroup>
                   </DropdownMenuSubContent>
                 </DropdownMenuSub>
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>Cấp bậc</DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent>
-                    <DropdownMenuRadioGroup
-                      value={row.original.label}
-                      onValueChange={value => {
-                        startUpdateTransition(() => {
-                          if (value) {
-                            toast.promise(
-                              updateUser({
-                                id: row.original.id,
-                                rankId: value,
-                              }),
-                              {
-                                loading: 'Đang cập nhật...',
-                                success: 'Cập nhật thành công',
-                                error: 'Cập nhật thất bại',
-                              },
-                            );
-                          }
-                        });
-                      }}
-                    >
-                      {ranks.map(r => (
-                        <DropdownMenuRadioItem
-                          key={r.id}
-                          value={r.id}
-                          disabled={
-                            isUpdatePending || r.id === row.original.rankId
-                          }
-                        >
-                          <div className="flex flex-row items-center justify-center gap-2">
-                            {r.name}
-                            {r.id === row.original.rankId && (
-                              <Star className="size-4" />
-                            )}
-                          </div>
-                        </DropdownMenuRadioItem>
-                      ))}
-                    </DropdownMenuRadioGroup>
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub> */}
               </DropdownMenuContent>
             </DropdownMenu>
           </>
