@@ -7,6 +7,7 @@ import {
 import type { Table } from '@tanstack/react-table';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import * as React from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import { DataTableFacetedFilter } from '@/components/data-table/data-table-faceted-filter';
 import { Button } from '@/components/ui/button';
@@ -356,7 +357,7 @@ export function MultiFilterRow<TData>({
               setSelectedOptions(prev => [
                 ...prev,
                 {
-                  id: crypto.randomUUID(),
+                  id: uuidv4(),
                   label: selectedOption.label,
                   value: selectedOption.value,
                   options: selectedOption.options ?? [],

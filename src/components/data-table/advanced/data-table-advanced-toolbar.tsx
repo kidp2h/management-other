@@ -4,6 +4,7 @@ import { PlusIcon } from '@radix-ui/react-icons';
 import type { Table } from '@tanstack/react-table';
 import { useSearchParams } from 'next/navigation';
 import * as React from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import { DataTableFilterCombobox } from '@/components/data-table/advanced/data-table-filter-combobox';
 import { DataTableViewOptions } from '@/components/data-table/data-table-view-options';
@@ -34,7 +35,7 @@ export function DataTableAdvancedToolbar<TData>({
   const options = React.useMemo<DataTableFilterOption<TData>[]>(() => {
     return filterFields.map(field => {
       return {
-        id: crypto.randomUUID(),
+        id: uuidv4(),
         label: field.label,
         value: field.value,
         key: field.key,

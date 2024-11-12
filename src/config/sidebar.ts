@@ -53,10 +53,6 @@ export function getMenuList(pathname: string): Group[] {
               href: '/roles',
               label: 'Quản lý vai trò',
             },
-            {
-              href: '/permissions',
-              label: 'Quản lý quyền',
-            },
           ],
         },
       ],
