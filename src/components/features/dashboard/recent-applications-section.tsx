@@ -32,7 +32,7 @@ export default function RecentApplicationsSection({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="h-72 overflow-y-scroll">
+        <div className="h-72 overflow-y-auto">
           <div className="space-y-8 ">
             {data.applicationsRecent7Days.map((application, index) => {
               return (

@@ -34,7 +34,9 @@ export function SheetMenu({}: SheetMenuProps) {
           >
             <Link href="/dashboard" className="flex items-center gap-2">
               <PanelsTopLeft className="mr-1 size-6" />
-              <SheetTitle className="text-lg font-bold">Brand</SheetTitle>
+              <SheetTitle className="text-lg font-bold">
+                Viện kiểm sát
+              </SheetTitle>
             </Link>
           </Button>
         </SheetHeader>

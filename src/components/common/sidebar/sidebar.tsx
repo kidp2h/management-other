@@ -46,7 +46,7 @@ export function Sidebar({ menuList }: SidebarProps) {
                   : 'translate-x-0 opacity-100',
               )}
             >
-              Brand
+              Viện kiểm sát
             </h1>
           </Link>
         </Button>

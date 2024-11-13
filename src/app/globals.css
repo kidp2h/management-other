@@ -35,8 +35,8 @@
     --radius: 0.5rem;
 
     --scrollbar-width: 0.5px;
-    --scrollbar-track-bg: #fafafa; /* bg-gray-100 */
-    --scrollbar-thumb-bg: #f4f4f5; /* bg-gray-300 */
+    --scrollbar-track-bg: #f4f4f5; /* bg-gray-100 */
+    --scrollbar-thumb-bg: #c0c0c0; /* bg-gray-300 */
     --scrollbar-track-bg-dark: #18181b; /* bg-neutral-700 */
     --scrollbar-thumb-bg-dark: #27272a; /* bg-neutral-500 */
     --chart-1: 173 58% 39%;

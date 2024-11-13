@@ -12,10 +12,11 @@ export interface MainContentProps {
   className?: string;
 }
 
-export default React.memo(
-  ({ children, hasCard, className }: MainContentProps) => {
+export default React.forwardRef<HTMLDivElement, MainContentProps>(
+  ({ children, hasCard, className }, ref) => {
     return hasCard ? (
       <Card
+        ref={ref}
         className={cn(
           'mt-6 h-full rounded-lg bg-zinc-100 dark:bg-zinc-900',
           className,
@@ -29,6 +30,7 @@ export default React.memo(
       </Card>
     ) : (
       <div
+        ref={ref}
         className={cn(
           'mt-6 h-full min-h-[calc(100vh-56px-64px-20px-24px-56px-48px)]',
           className,
