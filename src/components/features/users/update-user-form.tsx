@@ -31,7 +31,7 @@ export default function UpdateUserForm({
           try {
             if (values?.firstName && values?.lastName && values?.middleName) {
               fullName = values.middleName
-                ? `${values.firstName} ${values.middleName} ${values.lastName}`
+                ? `${values.lastName} ${values.middleName} ${values.firstName}`
                 : `${values.firstName} ${values.lastName}`;
             }
             console.log(role, data.publicMetadata, values.role);

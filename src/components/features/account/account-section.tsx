@@ -1,6 +1,5 @@
 'use client';
 import { useUser } from '@clerk/nextjs';
-import { isEmpty } from 'lodash';
 import Image from 'next/image';
 import React, { useRef, useState, useTransition } from 'react';
 import { toast } from 'sonner';
@@ -17,6 +16,7 @@ import {
 } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { updateMetadataUser } from '@/lib/clerk';
 import { handleClerkException } from '@/lib/utils';
 import {
   updateAccountSchema,
@@ -51,15 +51,12 @@ export default React.memo(() => {
     values: z.infer<typeof updateAccountSchema>,
   ) => {
     try {
-      await user?.update({
-        firstName: isEmpty(values.firstName)
-          ? user?.firstName || ''
-          : values.firstName,
-        lastName: isEmpty(values.lastName)
-          ? user?.lastName || ''
-          : values.lastName,
-      });
-      toast.success('Cập nhật thông tin thành công');
+      if (user?.id) {
+        await updateMetadataUser(user?.id, {
+          fullName: `${values.firstName} ${values.middleName} ${values.lastName}`,
+        });
+        toast.success('Cập nhật thông tin thành công');
+      }
     } catch (error) {
       handleClerkException(error, () => {
         toast.error('Cập nhật thông tin thất bại');
@@ -155,18 +152,7 @@ export default React.memo(() => {
                   <AutoForm
                     formSchema={updateAccountSchema}
                     resetOnSubmit={false}
-                    fieldConfig={{
-                      firstName: {
-                        inputProps: {
-                          placeholder: user?.firstName || 'Tên',
-                        },
-                      },
-                      lastName: {
-                        inputProps: {
-                          placeholder: user?.lastName || 'Họ',
-                        },
-                      },
-                    }}
+                    fieldConfig={{}}
                     onSubmit={values => {
                       handleUpdateAccount(values);
                     }}

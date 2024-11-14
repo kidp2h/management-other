@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const updateAccountSchema = z.object({
   firstName: z.string().optional().describe('Tên'),
+  middleName: z.string().optional().describe('Họ đệm'),
   lastName: z.string().optional().describe('Họ'),
 });
 
