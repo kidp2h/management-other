@@ -197,12 +197,10 @@ export const applicationSchema = z.object({
 
     .optional(),
 
-  identityCard: z
-    .string({
-      required_error: 'Số CCCD/CMND không được để trống',
-      invalid_type_error: 'Số CCCD/CMND không hợp lệ',
-    })
-    .max(12, 'Số CCCD/CMND không hợp lệ'),
+  identityCard: z.string({
+    required_error: 'Số CCCD/CMND không được để trống',
+    invalid_type_error: 'Số CCCD/CMND không hợp lệ',
+  }),
   issueDate: z.date({
     required_error: 'Ngày cấp không được để trống',
     invalid_type_error: 'Ngày cấp không hợp lệ',
