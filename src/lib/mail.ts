@@ -22,6 +22,7 @@ const smtpOptions: SMTPTransport.Options = {
 };
 
 export const sendEmail = async (data: EmailPayload) => {
+  if (data.to === null) return;
   const transporter = nodemailer.createTransport({
     ...smtpOptions,
   });
