@@ -633,21 +633,30 @@ export function getColumns({
           startUpdateTransition(async () => {
             toast.promise(
               async () => {
+                console.log('payload', payload);
+                console.log(row.original.email);
                 const { error } = await updateApplication({
                   id: row.original.id,
                   ...payload,
                 });
+
                 if (payload.status === 'COMPLETED') {
-                  const html = await render(
-                    InformationUpdateEmail({
-                      ...row.original,
-                    }),
-                  );
-                  await sendEmail({
-                    to: row.original.email,
-                    subject: 'Cập nhật trạng thái đơn',
-                    html,
-                  });
+                  if (
+                    row.original.email !== '' &&
+                    row.original.email !== null
+                  ) {
+                    const html = await render(
+                      InformationUpdateEmail({
+                        ...row.original,
+                      }),
+                    );
+
+                    await sendEmail({
+                      to: row.original.email,
+                      subject: 'Cập nhật trạng thái đơn',
+                      html,
+                    });
+                  }
                 }
                 if (error) {
                   toast.error('Cập nhật đơn thất bại');
