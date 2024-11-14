@@ -53,7 +53,7 @@ export default React.memo(() => {
     try {
       if (user?.id) {
         await updateMetadataUser(user?.id, {
-          fullName: `${values.firstName} ${values.middleName} ${values.lastName}`,
+          fullName: `${values.lastName} ${values.middleName} ${values.firstName}`,
         });
         toast.success('Cập nhật thông tin thành công');
       }
