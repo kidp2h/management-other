@@ -734,7 +734,7 @@ export function getColumns({
                   Hành động
                 </DropdownMenuLabel>
 
-                {user?.publicMetadata.roleName === 'Tiếp dân' && (
+                {user?.publicMetadata.roleName === 'Cán bộ tiếp dân' && (
                   <DropdownMenuItem
                     className="flex items-center gap-3"
                     disabled={
