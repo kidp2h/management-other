@@ -155,7 +155,7 @@ export const ApplicationsTable = ({
             application.status === 'RESEARCHING' &&
             application.acceptorId === user.id
           );
-        case 'Tiếp dân':
+        case 'Cán bộ tiếp dân':
           return application.status === 'PENDING';
         default:
           return false;
