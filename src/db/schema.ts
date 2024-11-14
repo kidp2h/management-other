@@ -22,7 +22,7 @@ export const applications = pgTable(
     objectsOfApplication: text('objects_of_application').notNull(),
     code: text('code').notNull().unique(),
     fullName: text('full_name').notNull(),
-    email: text('email').notNull(),
+    email: text('email'),
     identityCard: text('identity_card').notNull(),
     issueDate: timestamp('issue_date').notNull(),
     placeOfIssue: text('place_of_issue').notNull(),

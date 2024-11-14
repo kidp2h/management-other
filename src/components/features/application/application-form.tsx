@@ -255,6 +255,10 @@ export default function ApplicationForm({ isDialog }: ApplicationFormProps) {
                         dataset={[
                           { label: 'Nam', value: 'Nam' },
                           { label: 'Nữ', value: 'Nữ' },
+                          {
+                            label: 'Khác',
+                            value: 'Khác',
+                          },
                         ]}
                       />
                       <FormMessage />

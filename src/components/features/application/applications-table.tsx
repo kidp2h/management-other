@@ -89,7 +89,7 @@ export const ApplicationsTable = ({
     {
       label: 'Giới tính',
       value: 'gender',
-      options: ['Nam', 'Nữ'].map(type => ({
+      options: ['Nam', 'Nữ', 'Khác'].map(type => ({
         label: type[0]?.toUpperCase() + type.slice(1),
         value: type,
         withCount: false,

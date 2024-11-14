@@ -182,7 +182,7 @@ export const objectsOfApplication = ['Cá nhân', 'Tổ chức', 'Tập thể'] 
   string,
   ...string[],
 ];
-export const gender = ['Nam', 'Nữ'] as [string, ...string[]];
+export const gender = ['Nam', 'Nữ', 'Khác'] as [string, ...string[]];
 
 export const applicationSchema = z.object({
   id: z.string().optional(),
@@ -192,12 +192,11 @@ export const applicationSchema = z.object({
   }),
   email: z
     .string({
-      required_error: 'Email không được để trống',
       invalid_type_error: 'Email không hợp lệ',
     })
-    .email({
-      message: 'Email không hợp lệ',
-    }),
+
+    .optional(),
+
   identityCard: z
     .string({
       required_error: 'Số CCCD/CMND không được để trống',
