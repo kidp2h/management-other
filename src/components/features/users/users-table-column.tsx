@@ -113,7 +113,7 @@ export function getColumns(): ColumnDef<any, any>[] {
         </div>
       ),
       cell: ({ cell }) => (
-        <div className="flex w-[6.25rem] items-center">
+        <div className="flex w-full items-center">
           <Badge roundedType="md" className="flex w-full justify-center">
             {cell.getValue() || 'Chưa có'}
           </Badge>
