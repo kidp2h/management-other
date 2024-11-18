@@ -49,12 +49,12 @@ export default function RecentApplicationsSection({
                       {application.fullName}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {application.email}
+                      {application.phoneNumber}
                     </p>
                   </div>
                   <Badge
                     className={cn(
-                      'ml-auto flex w-32 justify-center bg-red-500 font-medium',
+                      'ml-auto flex w-32 justify-center bg-red-500 font-medium hover:bg-red-600 cursor-pointer ',
                     )}
                   >
                     {application.status === 'PENDING' && 'Đang xử lý'}

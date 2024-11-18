@@ -5,14 +5,17 @@ import { cn } from '@/lib/utils';
 
 export function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-dot-black/[0.15] dark:bg-dot-white/[0.05]">
+    <div className="">
       {/* <WavyBackground className=" mx-auto pb-40 w-full"> */}
       {/* <AuroraBackground> */}
       {/* <Spotlight
         className="-top-40 right-0 md:left-[25rem] md:-top-20 "
         fill={theme === 'dark' ? 'white' : 'black'}
       /> */}
-      <Navbar title="Quản lý" isAuth={false} />
+      <Navbar
+        title="Phần mềm quản lý đơn thư khiếu nại tố cáo Q8"
+        isAuth={false}
+      />
       <div className="size-full">{children}</div>
 
       <footer

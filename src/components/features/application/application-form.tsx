@@ -87,6 +87,7 @@ export default function ApplicationForm({ isDialog }: ApplicationFormProps) {
                       <RadioGroup
                         onValueChange={field.onChange}
                         defaultValue={field.value}
+                        tabIndex={0}
                         className="flex flex-row gap-4 "
                       >
                         {objectsOfApplication.map(item => (

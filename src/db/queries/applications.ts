@@ -38,6 +38,18 @@ export async function getApplications(input: Partial<GetApplicationSchema>) {
             value: input.fullName,
           })
         : undefined,
+      !!input.updatedAt
+        ? and(
+            gte(
+              applications.updatedAt,
+              new Date(input.updatedAt.split(',')[0]),
+            ),
+            lte(
+              applications.updatedAt,
+              new Date(input.updatedAt.split(',')[1]),
+            ),
+          )
+        : undefined,
       !!input.gender
         ? filterColumn({
             column: applications.gender,
@@ -135,6 +147,20 @@ export async function getApplications(input: Partial<GetApplicationSchema>) {
             value: input.addressOfIncidentOccured,
           })
         : undefined,
+      !!input.acceptor
+        ? filterColumn({
+            column: applications.acceptorId,
+            value: input.acceptor,
+            isSelectable: true,
+          })
+        : undefined,
+      !!input.status
+        ? filterColumn({
+            column: applications.status,
+            value: input.status,
+            isSelectable: true,
+          })
+        : undefined,
       !!input.content
         ? filterColumn({ column: applications.content, value: input.content })
         : undefined,
@@ -153,7 +179,7 @@ export async function getApplications(input: Partial<GetApplicationSchema>) {
         ? and(...expressions)
         : or(...expressions);
     const { data, total } = await db.transaction(async tx => {
-      const data = await tx
+      const data: any = await tx
         .select()
         .from(applications)
         .limit(input.per_page!)
@@ -174,33 +200,53 @@ export async function getApplications(input: Partial<GetApplicationSchema>) {
         .where(where)
         .execute()
         .then(res => res[0]?.count ?? 0);
+      const promises = [];
       for (const d of data) {
-        const promises = [];
         // console.log(d);
         promises.push(getUserById(d?.acceptorId));
         promises.push(getUserById(d?.receptionistId));
-        const [acceptor, receptionist] = await Promise.all(promises);
-        (
-          d as unknown as typeof data & {
-            acceptor: string;
-            receptionist: string;
-          }
-        ).acceptor =
-          (acceptor?.data?.publicMetadata.fullName as string) ||
-          acceptor?.data?.username ||
-          '';
+        // const [acceptor, receptionist] = await Promise.all(promises);
+        // (
+        //   d as unknown as typeof data & {
+        //     acceptor: string;
+        //     receptionist: string;
+        //   }
+        // ).acceptor =
+        //   (acceptor?.data?.publicMetadata.fullName as string) ||
+        //   acceptor?.data?.username ||
+        //   '';
 
-        (
-          d as unknown as typeof data & {
-            acceptor: string;
-            receptionist: string;
-          }
-        ).receptionist =
-          (receptionist?.data?.publicMetadata.fullName as string) ||
-          receptionist?.data?.username ||
-          '';
+        // (
+        //   d as unknown as typeof data & {
+        //     acceptor: string;
+        //     receptionist: string;
+        //   }
+        // ).receptionist =
+        //   (receptionist?.data?.publicMetadata.fullName as string) ||
+        //   receptionist?.data?.username ||
+        //   '';
       }
 
+      const users = await Promise.all(promises);
+      for (let i = 0; i < data.length; i += 2) {
+        // (data[i] as any).acceptor = '';
+        // (data[i + 1] as any).receptionist = '';
+        if (data[i + 1] !== undefined) {
+          data[i + 1] = {
+            ...data[i + 1],
+            acceptor: users[i]?.data?.publicMetadata.fullName as string,
+            receptionist:
+              (users[i + 1]?.data?.publicMetadata.fullName as string) || '',
+          };
+        }
+
+        data[i] = {
+          ...data[i],
+          acceptor: users[i]?.data?.publicMetadata.fullName as string,
+          receptionist:
+            (users[i + 1]?.data?.publicMetadata.fullName as string) || '',
+        };
+      }
       return {
         data,
         total,

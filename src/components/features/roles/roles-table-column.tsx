@@ -75,7 +75,7 @@ export function getColumns(): ColumnDef<any>[] {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Ngày tạo" />
       ),
-      cell: ({ cell }) => dayjs(cell.getValue() as Date).format('D-MM-YYYY'),
+      cell: ({ cell }) => dayjs(cell.getValue() as Date).format('DD/MM/YYYY'),
     },
     {
       id: 'actions',

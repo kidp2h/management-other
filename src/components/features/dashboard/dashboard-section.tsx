@@ -7,9 +7,13 @@ import React from 'react';
 import AutoBreadcrumb from '@/components/common/auto-breadcrumb';
 import MainContent from '@/components/common/main-content';
 import { Button } from '@/components/ui/button';
-import type { getApplicationsRecent7Days } from '@/db/actions/applications';
+import type {
+  getApplicationCompletedWithResearcher,
+  getApplicationsRecent7Days,
+} from '@/db/actions/applications';
 import { ContentLayout } from '@/layouts';
 
+import ApplicationCompletedTable from './application-completed-table';
 import { AreaGraph } from './area-graph';
 import { BarGraph } from './bar-graph';
 import OverviewSection from './overview-section';
@@ -34,6 +38,9 @@ export interface DashboardSectionProps {
       pending: number;
       completed: number;
     }[];
+    applicationCompletedWithResearcher: Awaited<
+      ReturnType<typeof getApplicationCompletedWithResearcher>
+    >;
   };
 }
 
@@ -57,7 +64,10 @@ export default function DashboardSection({ data }: DashboardSectionProps) {
     <ContentLayout title="Bảng điều khiển">
       <AutoBreadcrumb items={items} />
       <MainContent>
-        <Button onClick={handleExportToPng} className="mb-10">
+        <Button
+          onClick={handleExportToPng}
+          className="mb-10 bg-blue-500 hover:bg-blue-600"
+        >
           Xuất thống kê
         </Button>
         <div className="mb-5 text-2xl font-extrabold uppercase">Tổng quan</div>
@@ -69,6 +79,9 @@ export default function DashboardSection({ data }: DashboardSectionProps) {
               countApplicationsResearching: data?.countApplicationsResearching,
               countApplicationsCompleted: data?.countApplicationsCompleted,
             }}
+          />
+          <ApplicationCompletedTable
+            data={data.applicationCompletedWithResearcher}
           />
           <div className="mb-5 grid grid-cols-1 gap-4 lg:grid-cols-1 xl:grid-cols-7">
             <BarGraph
@@ -86,6 +99,7 @@ export default function DashboardSection({ data }: DashboardSectionProps) {
                 applicationsRecent6Months: data?.applicationsRecent6Months,
               }}
             />
+
             {/* <PieGraph /> */}
           </div>
         </div>

@@ -6,6 +6,7 @@ export const loginSchema = z.object({
     .string({
       required_error: 'Mã cán bộ không được để trống',
     })
+
     .describe('Mã cán bộ'),
 
   password: z

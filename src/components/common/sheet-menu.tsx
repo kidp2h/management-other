@@ -1,5 +1,6 @@
 'use client';
 import { MenuIcon, PanelsTopLeft } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -32,10 +33,11 @@ export function SheetMenu({}: SheetMenuProps) {
             variant="link"
             asChild
           >
+            <Image src="/logo.png" width={50} height={50} alt="" />
             <Link href="/dashboard" className="flex items-center gap-2">
               <PanelsTopLeft className="mr-1 size-6" />
               <SheetTitle className="text-lg font-bold">
-                Viện kiểm sát
+                Quản lý đơn thư
               </SheetTitle>
             </Link>
           </Button>

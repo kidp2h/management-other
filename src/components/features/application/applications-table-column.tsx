@@ -318,7 +318,7 @@ export function getColumns({
       ),
       cell: ({ cell }) => (
         <div className="w-full">
-          {dayjs(cell.getValue() as Date).format('D-MM-YYYY')}
+          {dayjs(cell.getValue() as Date).format('DD/MM/YYYY')}
         </div>
       ),
       enableSorting: false,
@@ -602,7 +602,7 @@ export function getColumns({
           <DataTableColumnHeader column={column} title="Ngày cập nhật" />
         </div>
       ),
-      cell: ({ cell }) => dayjs(cell.getValue() as Date).format('D-MM-YYYY'),
+      cell: ({ cell }) => dayjs(cell.getValue() as Date).format('DD/MM/YYYY'),
     },
     {
       accessorKey: 'createdAt',
@@ -615,7 +615,7 @@ export function getColumns({
           <DataTableColumnHeader column={column} title="Ngày tạo" />
         </div>
       ),
-      cell: ({ cell }) => dayjs(cell.getValue() as Date).format('D-MM-YYYY'),
+      cell: ({ cell }) => dayjs(cell.getValue() as Date).format('DD/MM/YYYY'),
     },
     {
       id: 'actions',

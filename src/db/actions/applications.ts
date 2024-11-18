@@ -8,6 +8,7 @@ import randomatic from 'randomatic';
 import { db } from '@/db';
 import { applications } from '@/db/schema';
 import { takeFirstOrThrow } from '@/db/utils';
+import { getUserById } from '@/lib/clerk';
 import { getErrorMessage } from '@/lib/handle-error';
 import type {
   CreateApplicationSchema,
@@ -181,6 +182,37 @@ export async function getCountAllApplicationsByStatus(status: Status) {
   }
 }
 
+export async function getApplicationCompletedWithResearcher() {
+  try {
+    const data = (await db
+      .select({
+        acceptorId: applications.acceptorId,
+        count: count(),
+      })
+      .from(applications)
+      .where(eq(applications.status, 'COMPLETED'))
+      .groupBy(applications.acceptorId)) as Array<{
+      acceptorId: string | null;
+      count: number;
+      acceptor?: string;
+    }>;
+    const promises = [];
+    for (const d of data) {
+      console.log(d);
+      promises.push(getUserById(d?.acceptorId));
+    }
+    const acceptors = await Promise.all(promises);
+    for (let i = 0; i < data.length; i++) {
+      data[i].acceptor = acceptors[i]?.data?.publicMetadata.fullName as string;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error getting applications:', error);
+    return 0;
+  }
+}
+
 export async function getApplicationsRecent3Months() {
   try {
     const data = await db
@@ -207,6 +239,7 @@ export async function getApplicationsRecent7Days() {
         fullName: applications.fullName,
         email: applications.email,
         status: applications.status,
+        phoneNumber: applications.phoneNumber,
       })
 
       .from(applications)

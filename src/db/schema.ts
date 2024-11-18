@@ -75,6 +75,13 @@ export const applications = pgTable(
   }),
 );
 
+export const enumStatusMapped = {
+  PENDING: 'Chờ xử lý',
+  REPORTED: 'Đã báo cáo lãnh đạo',
+  RESEARCHING: 'Đang điều tra',
+  COMPLETED: 'Hoàn tất',
+};
+
 // export const applicationsApproval = pgTable('applications_approval', {
 //   id: uuid('id')
 //     .$default(() => uuidv4())

@@ -79,7 +79,7 @@ export default function ApplicationDetailSection({
               <div className="flex flex-row items-center gap-5">
                 <span>Ngày cấp CCCD/CMT</span>
                 <Badge>
-                  {dayjs(application.issueDate).format('DD-MM-YYYY')}
+                  {dayjs(application.issueDate).format('DD/MM/YYYY')}
                 </Badge>
               </div>
               <div className="flex flex-row items-center gap-5">

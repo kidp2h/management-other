@@ -93,7 +93,9 @@ export const LoginForm = () => {
         className="fixed bottom-0 z-50"
         onExpired={handleExpired}
       /> */}
-      <AutoFormSubmit>Đăng nhập</AutoFormSubmit>
+      <AutoFormSubmit className="bg-blue-500 hover:bg-blue-600">
+        Đăng nhập
+      </AutoFormSubmit>
     </AutoForm>
   );
 };

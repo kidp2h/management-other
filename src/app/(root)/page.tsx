@@ -1,5 +1,6 @@
 import DashboardSection from '@/components/features/dashboard/dashboard-section';
 import {
+  getApplicationCompletedWithResearcher,
   getApplicationsRecent3Months,
   getApplicationsRecent6Months,
   getApplicationsRecent7Days,
@@ -16,6 +17,7 @@ export default async function DashboardPage() {
     applicationsRecent3Months,
     applicationsRecent7Days,
     applicationsRecent6Months,
+    applicationCompletedWithResearcher,
   ] = await Promise.all([
     getCountAllApplications(),
     getCountAllApplicationsByStatus('REPORTED'),
@@ -24,6 +26,7 @@ export default async function DashboardPage() {
     getApplicationsRecent3Months(),
     getApplicationsRecent7Days(),
     getApplicationsRecent6Months(),
+    getApplicationCompletedWithResearcher(),
   ]);
 
   return (
@@ -36,6 +39,7 @@ export default async function DashboardPage() {
         applicationsRecent3Months,
         applicationsRecent7Days,
         applicationsRecent6Months,
+        applicationCompletedWithResearcher,
       }}
     />
   );

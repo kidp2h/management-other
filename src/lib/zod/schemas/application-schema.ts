@@ -275,6 +275,9 @@ export type ApplicationsSchema = z.infer<typeof applicationSchema>;
 export const getApplicationsSchema = z.object({
   ...searchParamsSchema.shape,
   ...applicationSchema.partial().shape,
+  acceptor: z.string().optional(),
+  status: z.string().optional(),
+  updatedAt: z.string().optional(),
 });
 export const createApplicationSchema = applicationSchema.omit({
   id: true,

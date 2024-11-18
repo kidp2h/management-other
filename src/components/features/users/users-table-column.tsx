@@ -97,7 +97,9 @@ export function getColumns(): ColumnDef<any, any>[] {
       ),
       cell: ({ cell }) => (
         <div className="flex w-full items-center">
-          <Badge>{cell.getValue() || 'Chưa có thông tin'}</Badge>
+          <Badge className="bg-sky-400">
+            {cell.getValue() || 'Chưa có thông tin'}
+          </Badge>
         </div>
       ),
     },
@@ -114,7 +116,10 @@ export function getColumns(): ColumnDef<any, any>[] {
       ),
       cell: ({ cell }) => (
         <div className="flex w-full items-center">
-          <Badge roundedType="md" className="flex w-full justify-center">
+          <Badge
+            roundedType="md"
+            className="flex w-full justify-center bg-blue-500"
+          >
             {cell.getValue() || 'Chưa có'}
           </Badge>
         </div>
@@ -171,7 +176,7 @@ export function getColumns(): ColumnDef<any, any>[] {
         <div className="flex w-fit items-center">
           <span className="flex flex-row items-center gap-2 whitespace-nowrap">
             <Badge roundedType="md" variant="outline">
-              {dayjs(cell.getValue() as Date).format('D-MM-YYYY')}
+              {dayjs(cell.getValue() as Date).format('DD/MM/YYYY')}
             </Badge>
             {dayjs(cell.getValue() as Date).format('hh:mm:ss')}
           </span>
@@ -193,7 +198,7 @@ export function getColumns(): ColumnDef<any, any>[] {
         <div className="flex w-fit items-center">
           <span className="flex flex-row items-center gap-2 whitespace-nowrap">
             <Badge roundedType="md" variant="outline">
-              {dayjs(cell.getValue() as Date).format('D-MM-YYYY')}
+              {dayjs(cell.getValue() as Date).format('DD/MM/YYYY')}
             </Badge>
             {dayjs(cell.getValue() as Date).format('hh:mm:ss')}
           </span>
