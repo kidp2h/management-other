@@ -86,10 +86,18 @@ export function DataTableAdvancedFacetedFilter<TData, TValue>({
                   />
                 )}
                 <span>{option.label}</span>
+
                 {option.withCount &&
                   column?.getFacetedUniqueValues()?.get(option.value) && (
                     <span className="ml-auto flex size-4 items-center justify-center font-mono text-xs">
                       {column?.getFacetedUniqueValues().get(option.value)}
+                    </span>
+                  )}
+                {option.valueCount &&
+                  option.withCount &&
+                  column?.getFacetedUniqueValues()?.get(option.valueCount) && (
+                    <span className="ml-auto flex size-4 items-center justify-center font-mono text-xs">
+                      {column?.getFacetedUniqueValues().get(option.valueCount)}
                     </span>
                   )}
               </CommandItem>

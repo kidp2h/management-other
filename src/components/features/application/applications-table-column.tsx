@@ -12,6 +12,7 @@ import {
   Bookmark,
   BriefcaseBusiness,
   CalendarPlus,
+  Check,
   CircleCheckBig,
   CircleDashed,
   CircleX,
@@ -30,7 +31,6 @@ import {
   Pin,
   RectangleEllipsis,
   Send,
-  Star,
   TableOfContents,
   TypeOutline,
   User,
@@ -762,7 +762,9 @@ export function getColumns({
                   <DropdownMenuItem
                     className="flex items-center gap-3"
                     disabled={
-                      row.original.status !== 'REPORTED' || isUpdatePending
+                      (row.original.status !== 'REPORTED' &&
+                        user?.publicMetadata.roleName !== 'Lãnh đạo') ||
+                      isUpdatePending
                     }
                     onSelect={() => {
                       handleUpdateApplication({
@@ -779,11 +781,15 @@ export function getColumns({
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger
                       className={
-                        row.original.status !== 'REPORTED'
+                        row.original.status !== 'REPORTED' &&
+                        user?.publicMetadata.roleName !== 'Lãnh đạo'
                           ? 'cursor-not-allowed opacity-50'
                           : ''
                       }
-                      disabled={row.original.status !== 'REPORTED'}
+                      disabled={
+                        row.original.status !== 'REPORTED' &&
+                        user?.publicMetadata.roleName !== 'Lãnh đạo'
+                      }
                     >
                       Phân công kiểm sát viên
                     </DropdownMenuSubTrigger>
@@ -806,16 +812,13 @@ export function getColumns({
                             <DropdownMenuRadioItem
                               key={user.id}
                               value={user.id}
-                              disabled={
-                                isUpdatePending ||
-                                user.id === row.original.acceptorId
-                              }
+                              disabled={isUpdatePending}
                             >
                               <div className="flex flex-row items-center justify-center gap-2">
                                 {(user.publicMetadata.fullName as string) ||
                                   user.username}
                                 {user.id === row.original.acceptorId && (
-                                  <Star className="size-4" />
+                                  <Check className="size-4" />
                                 )}
                               </div>
                             </DropdownMenuRadioItem>
@@ -825,22 +828,21 @@ export function getColumns({
                   </DropdownMenuSub>
                 )}
 
-                {user?.publicMetadata.roleName === 'Kiểm sát viên' && (
-                  <DropdownMenuItem
-                    className="flex items-center gap-3"
-                    disabled={
-                      row.original.status === 'COMPLETED' || isUpdatePending
-                    }
-                    onSelect={() => {
-                      handleUpdateApplication({
-                        status: 'COMPLETED',
-                      });
-                    }}
-                  >
-                    <CircleCheckBig className="size-4" />
-                    Hoàn tất thụ lý
-                  </DropdownMenuItem>
-                )}
+                {user?.publicMetadata.roleName === 'Kiểm sát viên' ||
+                  (user?.publicMetadata.roleName === 'Lãnh đạo' && (
+                    <DropdownMenuItem
+                      className="flex items-center gap-3"
+                      disabled={isUpdatePending}
+                      onSelect={() => {
+                        handleUpdateApplication({
+                          status: 'COMPLETED',
+                        });
+                      }}
+                    >
+                      <CircleCheckBig className="size-4" />
+                      Hoàn tất thụ lý
+                    </DropdownMenuItem>
+                  ))}
               </DropdownMenuContent>
             </DropdownMenu>
           </>

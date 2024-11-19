@@ -13,6 +13,7 @@ export interface Option {
   key?: string;
   icon?: React.ComponentType<{ className?: string }>;
   isBoolean?: boolean;
+  valueCount?: any;
   withCount?: boolean;
 }
 

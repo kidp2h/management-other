@@ -76,103 +76,188 @@ export const ApplicationsTable = ({
       placeholder: 'Tìm kiếm theo số CCCD/CMND',
     },
   ];
-  const filterFieldsBox: DataTableFilterField<any>[] = [
-    {
-      label: 'Dân tộc',
-      value: 'ethnicity',
-      options: applications.ethnicity.enumValues.map(type => ({
-        label: type[0]?.toUpperCase() + type.slice(1),
-        value: type,
-        withCount: false,
-      })),
-    },
-    {
-      label: 'Giới tính',
-      value: 'gender',
-      options: ['Nam', 'Nữ', 'Khác'].map(type => ({
-        label: type[0]?.toUpperCase() + type.slice(1),
-        value: type,
-        withCount: false,
-      })),
-    },
-    {
-      label: 'Lĩnh vực',
-      value: 'fieldOfApplication',
-      options: fieldOfApplication.map(type => ({
-        label: type[0]?.toUpperCase() + type.slice(1),
-        value: type,
-        withCount: false,
-      })),
-    },
-    {
-      label: 'Quốc tịch',
-      value: 'national',
-      options: nationalities.map(type => ({
-        label: type[0]?.toUpperCase() + type.slice(1),
-        value: type,
-        withCount: false,
-      })),
-    },
-    {
-      label: 'Loại đơn',
-      value: 'kindOfApplication',
-      options: kindOfApplication.map(type => ({
-        label: type[0]?.toUpperCase() + type.slice(1),
-        value: type,
-        withCount: false,
-      })),
-    },
-    {
-      label: 'Tỉnh/Thành',
-      value: 'province',
-      options: provinces.map(p => ({
-        label: p.name,
-        value: p.name,
-        withCount: false,
-      })),
-    },
-    {
-      label: 'Tỉnh/Thành xảy ra vụ việc',
-      value: 'provinceOfIncidentOccured',
-      options: provinces.map(p => ({
-        label: p.name,
-        value: p.name,
-        withCount: false,
-      })),
-    },
-    {
-      label: 'Người thụ lý',
-      value: 'acceptor',
-      options: users.map(p => ({
-        label: p.publicMetadata.fullName,
-        value: p.id,
-        withCount: false,
-      })),
-    },
-    {
-      label: 'Trạng thái',
-      value: 'status',
-      options: applications.status.enumValues.map(type => ({
-        label: enumStatusMapped[type],
-        value: type,
-        withCount: false,
-      })),
-    },
-    {
-      label: 'Thời gian tạo',
-      value: 'updatedAt',
-      isDate: true,
-    },
-  ];
+  let filterFieldsBox: DataTableFilterField<any>[] = [];
+  if (user?.publicMetadata.roleName === 'Lãnh đạo') {
+    filterFieldsBox = [
+      {
+        label: 'Dân tộc',
+        value: 'ethnicity',
+        options: applications.ethnicity.enumValues.map(type => ({
+          label: type[0]?.toUpperCase() + type.slice(1),
+          value: type,
+          withCount: false,
+        })),
+      },
+      {
+        label: 'Giới tính',
+        value: 'gender',
+        options: ['Nam', 'Nữ', 'Khác'].map(type => ({
+          label: type[0]?.toUpperCase() + type.slice(1),
+          value: type,
+          withCount: false,
+        })),
+      },
+      {
+        label: 'Lĩnh vực',
+        value: 'fieldOfApplication',
+        options: fieldOfApplication.map(type => ({
+          label: type[0]?.toUpperCase() + type.slice(1),
+          value: type,
+          withCount: false,
+        })),
+      },
+      {
+        label: 'Quốc tịch',
+        value: 'national',
+        options: nationalities.map(type => ({
+          label: type[0]?.toUpperCase() + type.slice(1),
+          value: type,
+          withCount: false,
+        })),
+      },
+      {
+        label: 'Loại đơn',
+        value: 'kindOfApplication',
+        options: kindOfApplication.map(type => ({
+          label: type[0]?.toUpperCase() + type.slice(1),
+          value: type,
+          withCount: false,
+        })),
+      },
+      {
+        label: 'Tỉnh/Thành',
+        value: 'province',
+        options: provinces.map(p => ({
+          label: p.name,
+          value: p.name,
+          withCount: false,
+        })),
+      },
+      {
+        label: 'Tỉnh/Thành xảy ra vụ việc',
+        value: 'provinceOfIncidentOccured',
+        options: provinces.map(p => ({
+          label: p.name,
+          value: p.name,
+          withCount: false,
+        })),
+      },
+      {
+        label: 'Người thụ lý',
+        value: 'acceptor',
+        options: users.map(p => ({
+          label: String(p.publicMetadata.fullName),
+          value: p.id,
+          valueCount: String(p.publicMetadata.fullName),
+          withCount: true,
+        })),
+      },
+      {
+        label: 'Trạng thái',
+        value: 'status',
+        options: applications.status.enumValues.map(type => ({
+          label: enumStatusMapped[type],
+          value: type,
+          withCount: true,
+        })),
+      },
+      {
+        label: 'Thời gian tạo',
+        value: 'updatedAt',
+        isDate: true,
+      },
+    ];
+  } else {
+    filterFieldsBox = [
+      {
+        label: 'Dân tộc',
+        value: 'ethnicity',
+        options: applications.ethnicity.enumValues.map(type => ({
+          label: type[0]?.toUpperCase() + type.slice(1),
+          value: type,
+          withCount: false,
+        })),
+      },
+      {
+        label: 'Giới tính',
+        value: 'gender',
+        options: ['Nam', 'Nữ', 'Khác'].map(type => ({
+          label: type[0]?.toUpperCase() + type.slice(1),
+          value: type,
+          withCount: false,
+        })),
+      },
+      {
+        label: 'Lĩnh vực',
+        value: 'fieldOfApplication',
+        options: fieldOfApplication.map(type => ({
+          label: type[0]?.toUpperCase() + type.slice(1),
+          value: type,
+          withCount: false,
+        })),
+      },
+      {
+        label: 'Quốc tịch',
+        value: 'national',
+        options: nationalities.map(type => ({
+          label: type[0]?.toUpperCase() + type.slice(1),
+          value: type,
+          withCount: false,
+        })),
+      },
+      {
+        label: 'Loại đơn',
+        value: 'kindOfApplication',
+        options: kindOfApplication.map(type => ({
+          label: type[0]?.toUpperCase() + type.slice(1),
+          value: type,
+          withCount: false,
+        })),
+      },
+      {
+        label: 'Tỉnh/Thành',
+        value: 'province',
+        options: provinces.map(p => ({
+          label: p.name,
+          value: p.name,
+          withCount: false,
+        })),
+      },
+      {
+        label: 'Tỉnh/Thành xảy ra vụ việc',
+        value: 'provinceOfIncidentOccured',
+        options: provinces.map(p => ({
+          label: p.name,
+          value: p.name,
+          withCount: false,
+        })),
+      },
+
+      {
+        label: 'Trạng thái',
+        value: 'status',
+        options: applications.status.enumValues.map(type => ({
+          label: enumStatusMapped[type],
+          value: type,
+          withCount: true,
+        })),
+      },
+      {
+        label: 'Thời gian tạo',
+        value: 'updatedAt',
+        isDate: true,
+      },
+    ];
+  }
+
   // const Toolbar = featureFlags.includes('advancedFilter')
   //   ? DataTableAdvancedToolbar
   //   : DataTableToolbar;
   const { table } = useDataTable({
     data: data.filter((application: any) => {
-      if (application.status === 'COMPLETED') return true;
       switch (user?.publicMetadata.roleName) {
         case 'Lãnh đạo':
-          return application.status === 'REPORTED';
+          return true;
         case 'Kiểm sát viên':
           return (
             application.status === 'RESEARCHING' &&
