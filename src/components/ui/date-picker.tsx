@@ -12,19 +12,19 @@ import {
 } from '@/components/ui/popover';
 import { forwardRef } from 'react';
 import dayjs from 'dayjs';
-import { FormControl } from './form';
 
 export const DatePicker = forwardRef<
   HTMLDivElement,
   {
     date?: Date;
-    setDate?: (date?: Date) => void;
+    setDate: (date?: Date) => void;
     placeholder: string;
+    disabled?: boolean;
   }
->(function DatePickerCmp({ date, setDate, placeholder }, ref) {
+>(function DatePickerCmp({ date, setDate, placeholder, disabled }, ref) {
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger asChild disabled={disabled}>
         <Button
           variant={'outline'}
           className={cn(
@@ -33,15 +33,16 @@ export const DatePicker = forwardRef<
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? dayjs(date).format('DD/MM/YYYY') : <span>{placeholder}</span>}
+          {date ? dayjs(date).format('DD-MM-YYYY') : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" ref={ref}>
+      <PopoverContent className="w-[520px] p-0" ref={ref}>
         <Calendar
           mode="single"
           selected={date}
           onSelect={setDate}
           initialFocus
+          className=""
           captionLayout="dropdown-buttons"
           fromYear={1960}
           toYear={new Date().getFullYear() + 2}

@@ -193,3 +193,11 @@ input[type='number'] {
 #msdoc-renderer {
   height: 100%;
 }
+
+.rdp-vhidden {
+  @apply hidden;
+}
+
+.rdp-multiple_months {
+  width: 800px;
+}

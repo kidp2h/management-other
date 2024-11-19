@@ -8,9 +8,5 @@ export interface ApplicationCompletedTableProps {
 export default function ApplicationCompletedTable({
   data,
 }: ApplicationCompletedTableProps) {
-  return (
-    <div>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-    </div>
-  );
+  return <div></div>;
 }

@@ -635,7 +635,6 @@ export default function ApplicationForm({ isDialog }: ApplicationFormProps) {
           </Button>
         </form>
       </Form>
-      <pre>{JSON.stringify(form.getValues(), null, 2)}</pre>
     </div>
   );
 }
