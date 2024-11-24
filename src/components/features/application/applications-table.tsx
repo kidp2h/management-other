@@ -3,12 +3,14 @@
 import { useUser } from '@clerk/nextjs';
 import type { User } from '@clerk/nextjs/server';
 import React, { use, useEffect } from 'react';
+import { toast } from 'sonner';
 
 import { CreateDataDialog } from '@/components/common/create-data-dialog';
 import { DataTableToolbarActions } from '@/components/common/data-table-toolbar-actions';
 import { DataTableAdvancedToolbar } from '@/components/data-table/advanced/data-table-advanced-toolbar';
 import { DataTable } from '@/components/data-table/data-table';
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar';
+import { createApplication } from '@/db/actions/applications';
 import type { getApplications } from '@/db/queries/applications';
 import { type Applications, applications, enumStatusMapped } from '@/db/schema';
 import { useDataTable } from '@/hooks/use-data-table';
@@ -253,6 +255,7 @@ export const ApplicationsTable = ({
   // const Toolbar = featureFlags.includes('advancedFilter')
   //   ? DataTableAdvancedToolbar
   //   : DataTableToolbar;
+
   const { table } = useDataTable({
     data: data.filter((application: any) => {
       switch (user?.publicMetadata.roleName) {
@@ -285,6 +288,45 @@ export const ApplicationsTable = ({
     <DataTable table={table}>
       <DataTableToolbarActions<Applications>
         table={table}
+        handleImport={async data => {
+          const promises = [];
+          for (const d of data) {
+            const [day, month, year] = d[7].split('/');
+            const payload = {
+              fullName: d[0],
+              email: d[1],
+              identityCard: d[5],
+              issueDate: new Date(+year, +month - 1, +day),
+              placeOfIssue: d[6],
+              gender: d[3],
+              phoneNumber: d[8],
+              ethnicity: d[4],
+              address: d[13],
+              province: d[10],
+              district: d[11],
+              ward: d[12],
+              national: d[9],
+              occupation: d[2],
+              kindOfApplication: d[14],
+              fieldOfApplication: d[15],
+              provinceOfIncidentOccured: d[17],
+              districtOfIncidentOccured: d[18],
+              wardOfIncidentOccured: d[19],
+              addressOfIncidentOccured: d[20],
+              content: d[16],
+              contentDetail: d[21],
+              objectsOfApplication: d[22],
+            };
+            console.log(payload);
+            const application = createApplication(payload, user?.id || '', []);
+            promises.push(application);
+          }
+          const results = await Promise.all(promises);
+          const errors = results.filter(result => result.error !== null);
+          toast(`${results.length - errors.length} đơn đã được tạo!`);
+          if (errors.length > 0)
+            toast(`${errors.length} đơn bị trùng thông tin không thể tạo!`);
+        }}
         fileNameExport="applications"
         createDialog={
           <CreateDataDialog
