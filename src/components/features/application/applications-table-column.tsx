@@ -828,21 +828,20 @@ export function getColumns({
                   </DropdownMenuSub>
                 )}
 
-                {user?.publicMetadata.roleName === 'Kiểm sát viên' ||
-                  (user?.publicMetadata.roleName === 'Lãnh đạo' && (
-                    <DropdownMenuItem
-                      className="flex items-center gap-3"
-                      disabled={isUpdatePending}
-                      onSelect={() => {
-                        handleUpdateApplication({
-                          status: 'COMPLETED',
-                        });
-                      }}
-                    >
-                      <CircleCheckBig className="size-4" />
-                      Hoàn tất thụ lý
-                    </DropdownMenuItem>
-                  ))}
+                {user?.publicMetadata.roleName === 'Kiểm sát viên' && (
+                  <DropdownMenuItem
+                    className="flex items-center gap-3"
+                    disabled={isUpdatePending}
+                    onSelect={() => {
+                      handleUpdateApplication({
+                        status: 'COMPLETED',
+                      });
+                    }}
+                  >
+                    <CircleCheckBig className="size-4" />
+                    Hoàn tất thụ lý
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           </>

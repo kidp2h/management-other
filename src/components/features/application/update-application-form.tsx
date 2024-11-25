@@ -3,7 +3,7 @@ import { useAuth } from '@clerk/nextjs';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { Expand } from 'lucide-react';
-import React, { useEffect, useTransition } from 'react';
+import React, { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -56,7 +56,6 @@ export default function UpdateApplicationForm({
   data,
   onSuccess,
 }: UpdateApplicationFormProps) {
-  console.log(data);
   const form = useForm<UpdateApplicationSchema>({
     resolver: zodResolver(updateApplicationSchema),
     defaultValues: {
@@ -65,7 +64,7 @@ export default function UpdateApplicationForm({
     },
   });
   const [filesRemove, setFilesRemove] = React.useState<string[]>([]);
-  const { fetchProvinces, provinces } = useGlobalStore(state => state);
+  const { provinces } = useGlobalStore(state => state);
   const [isUpdatePending, startUpdateTransition] = useTransition();
   const [province, setProvince] = React.useState(form.getValues('province'));
   const [district, setDistrict] = React.useState(form.getValues('district'));
@@ -82,9 +81,7 @@ export default function UpdateApplicationForm({
     defaultUploadedFiles: [],
   });
   const { userId } = useAuth();
-  useEffect(() => {
-    fetchProvinces();
-  }, [fetchProvinces]);
+
   const onSubmit = async (values: UpdateApplicationSchema) => {
     try {
       if (userId) {

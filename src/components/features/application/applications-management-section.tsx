@@ -1,12 +1,13 @@
 'use client';
 import type { User } from '@clerk/nextjs/server';
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 
 import AutoBreadcrumb from '@/components/common/auto-breadcrumb';
 import MainContent from '@/components/common/main-content';
 import { DataTableSkeleton } from '@/components/data-table/data-table-skeleton';
 import type { getApplications } from '@/db/queries/applications';
 import { ContentLayout } from '@/layouts';
+import { useGlobalStore } from '@/providers/global-store-provider';
 import { TableProvider } from '@/providers/table-provider';
 
 import { ApplicationsTable } from './applications-table';
@@ -26,7 +27,11 @@ export default function ApplicationsManagementSection({
     { isSeparator: true },
     { name: 'Đơn' },
   ];
+  const { fetchProvinces } = useGlobalStore(state => state);
 
+  useEffect(() => {
+    fetchProvinces();
+  }, []);
   return (
     <ContentLayout title="Vai trò">
       <AutoBreadcrumb items={items} />
