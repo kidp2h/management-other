@@ -201,6 +201,7 @@ export async function getApplications(input: Partial<GetApplicationSchema>) {
         .execute()
         .then(res => res[0]?.count ?? 0);
       const promises = [];
+      console.log(data);
       for (const d of data) {
         // console.log(d);
         promises.push(getUserById(d?.acceptorId));
@@ -228,25 +229,86 @@ export async function getApplications(input: Partial<GetApplicationSchema>) {
       }
 
       const users = await Promise.all(promises);
-      for (let i = 0; i < data.length; i += 2) {
-        // (data[i] as any).acceptor = '';
-        // (data[i + 1] as any).receptionist = '';
-        if (data[i + 1] !== undefined) {
-          data[i + 1] = {
-            ...data[i + 1],
-            acceptor: users[i]?.data?.publicMetadata.fullName as string,
+      console.log(users);
+      for (let i = 0; i < data.length; i++) {
+        if (i === 0) {
+          data[i] = {
+            ...data[i],
+            acceptor:
+              (users[i]?.data?.publicMetadata.fullName as string) ||
+              users[i]?.data?.username ||
+              '',
             receptionist:
-              (users[i + 1]?.data?.publicMetadata.fullName as string) || '',
+              (users[i + 1]?.data?.publicMetadata.fullName as string) ||
+              users[i + 1]?.data?.username ||
+              '',
+          };
+        } else {
+          data[i] = {
+            ...data[i],
+            acceptor:
+              (users[i * 2]?.data?.publicMetadata.fullName as string) ||
+              users[i * 2]?.data?.username ||
+              '',
+            receptionist:
+              (users[i * 2 + 1]?.data?.publicMetadata.fullName as string) ||
+              users[i * 2 + 1]?.data?.username ||
+              '',
           };
         }
+        // data[i] = {
+        //   ...data[i],
+        //   acceptor:
+        //     (users[i]?.data?.publicMetadata.fullName as string) ||
+        //     users[i]?.data?.username ||
+        //     '',
+        //   receptionist:
+        //     (users[i + 1]?.data?.publicMetadata.fullName as string) ||
+        //     users[i + 1]?.data?.username ||
+        //     '',
+        // };
+        // if (data[i + 1] !== undefined) {
+        //   data[i + 1] = {
+        //     ...data[i + 1],
+        //     acceptor:
+        //       (users[i + 2]?.data?.publicMetadata.fullName as string) ||
+        //       users[i + 2]?.data?.username ||
+        //       '',
+        //     receptionist:
+        //       (users[i + 3]?.data?.publicMetadata.fullName as string) ||
+        //       users[i + 3]?.data?.username ||
+        //       '',
+        //   };
+        // }
+        // (data[i] as any).acceptor = '';
+        // (data[i + 1] as any).receptionist = '';
+        // if (data[i + 1] !== undefined) {
+        //   data[i + 1] = {
+        //     ...data[i + 1],
+        //     acceptor:
+        //       (users[i]?.data?.publicMetadata.fullName as string) ||
+        //       users[i]?.data?.username ||
+        //       '',
+        //     receptionist:
+        //       (users[i + 1]?.data?.publicMetadata.fullName as string) ||
+        //       users[i + 1]?.data?.username ||
+        //       '',
+        //   };
+        // }
 
-        data[i] = {
-          ...data[i],
-          acceptor: users[i]?.data?.publicMetadata.fullName as string,
-          receptionist:
-            (users[i + 1]?.data?.publicMetadata.fullName as string) || '',
-        };
+        // data[i] = {
+        //   ...data[i],
+        //   acceptor:
+        //     (users[i]?.data?.publicMetadata.fullName as string) ||
+        //     users[i]?.data?.username ||
+        //     '',
+        //   receptionist:
+        //     (users[i + 1]?.data?.publicMetadata.fullName as string) ||
+        //     users[i + 1]?.data?.username ||
+        //     '',
+        // };
       }
+      // console.log(data);
       return {
         data,
         total,

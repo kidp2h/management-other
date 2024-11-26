@@ -205,7 +205,7 @@ export async function getApplicationCompletedWithResearcher() {
     for (let i = 0; i < data.length; i++) {
       data[i].acceptor = acceptors[i]?.data?.publicMetadata.fullName as string;
     }
-
+    console.log(data);
     return data;
   } catch (error) {
     console.error('Error getting applications:', error);

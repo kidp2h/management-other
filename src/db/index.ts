@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === 'production') {
   client = global.client;
 }
 
-export const db = drizzle(client, { schema, logger: true });
+export const db = drizzle(client, { schema, logger: false });
 if (!db) throw new Error('Failed initialize db');
 export type Response<T> = {
   data: T;

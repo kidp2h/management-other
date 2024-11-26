@@ -769,6 +769,7 @@ export function getColumns({
                     onSelect={() => {
                       handleUpdateApplication({
                         status: 'PENDING',
+                        acceptorId: null,
                       });
                     }}
                   >
