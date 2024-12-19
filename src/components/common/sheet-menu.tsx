@@ -1,4 +1,5 @@
 'use client';
+import { useUser } from '@clerk/nextjs';
 import { MenuIcon, PanelsTopLeft } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -18,7 +19,12 @@ import { getMenuList } from '@/config/sidebar';
 type SheetMenuProps = {};
 export function SheetMenu({}: SheetMenuProps) {
   const pathName = usePathname();
-  const menuList = getMenuList(pathName);
+  const { user } = useUser();
+
+  const menuList = getMenuList(
+    pathName,
+    (user?.publicMetadata?.roleName as string) || '',
+  );
   return (
     <Sheet>
       <SheetTrigger className="lg:hidden" asChild>
