@@ -1,5 +1,6 @@
 'use memo';
-import { clerkClient } from '@clerk/nextjs/server';
+import { clerkClient, currentUser } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 import React from 'react';
 
 import { UsersManagementSection } from '@/components/features/users/users-management-section';
@@ -15,6 +16,11 @@ export default async function UsersManagementPage({
     typeof searchParams.username === 'string'
       ? searchParams.username?.split('~')[0]
       : undefined;
+  const user = await currentUser();
+  console.log(user?.publicMetadata);
+  if (user?.publicMetadata.roleName !== 'Lãnh đạo') {
+    redirect('/');
+  }
   try {
     const query: Record<string, any> = {
       limit: 10,

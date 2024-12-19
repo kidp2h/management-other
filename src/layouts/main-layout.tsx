@@ -1,5 +1,6 @@
 'use client';
 
+import { useUser } from '@clerk/nextjs';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 
@@ -12,7 +13,12 @@ import { useGlobalStore } from '@/providers/global-store-provider';
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const { isOpen } = useGlobalStore(state => state);
   const pathname = usePathname();
-  const menuList = getMenuList(pathname);
+  const { user } = useUser();
+  console.log('menulist', user);
+  const menuList = getMenuList(
+    pathname,
+    (user?.publicMetadata?.roleName as string) || '',
+  );
 
   return (
     <>

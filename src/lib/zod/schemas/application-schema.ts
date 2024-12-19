@@ -194,6 +194,7 @@ export const applicationSchema = z.object({
     .string({
       invalid_type_error: 'Email không hợp lệ',
     })
+    .email('Email không hợp lệ')
 
     .optional(),
 

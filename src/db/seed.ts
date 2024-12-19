@@ -9,26 +9,22 @@ import {
 
 import { db } from '.';
 import type { Applications } from './schema';
-import { applications } from './schema';
+import { applications, roles } from './schema';
 
 const seed = async () => {
   // Initialize PostgreSQL connection
 
   // Seed users
-  // await db.insert(roles).values([
-  //   {
-  //     code: 'LANH_DAO',
-  //     name: 'Lãnh đạo',
-  //   },
-  //   {
-  //     code: 'CAN_BO_TIEP_DAN',
-  //     name: 'Cán bộ tiếp dân',
-  //   },
-  //   {
-  //     code: 'KIEM_SAT_VIEN',
-  //     name: 'Kiểm sát viên',
-  //   },
-  // ]);
+  await db.insert(roles).values([
+    {
+      code: 'LANH_DAO',
+      name: 'Lãnh đạo',
+    },
+    {
+      code: 'KIEM_SAT_VIEN',
+      name: 'Kiểm sát viên',
+    },
+  ]);
   const values: Applications[] = [];
 
   for (let i = 0; i < 234; i++) {

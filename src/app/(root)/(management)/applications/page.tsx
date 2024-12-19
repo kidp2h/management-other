@@ -1,4 +1,4 @@
-import { clerkClient } from '@clerk/nextjs/server';
+import { clerkClient, currentUser } from '@clerk/nextjs/server';
 import React from 'react';
 
 import ApplicationsManagementSection from '@/components/features/application/applications-management-section';
@@ -14,6 +14,8 @@ export default async function ApplicationsManagementPage({
 }: ApplicationsManagementPageProps) {
   const search = getApplicationsSchema.parse(searchParams);
   const applications = getApplications(search);
+  const user = await currentUser();
+  console.log(user?.publicMetadata);
   try {
     const users = await clerkClient().users.getUserList({
       limit: 500,

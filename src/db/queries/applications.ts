@@ -229,7 +229,7 @@ export async function getApplications(input: Partial<GetApplicationSchema>) {
       }
 
       const users = await Promise.all(promises);
-      console.log(users);
+      // console.log(users);
       for (let i = 0; i < data.length; i++) {
         if (i === 0) {
           data[i] = {
