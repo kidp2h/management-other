@@ -262,9 +262,14 @@ export const ApplicationsTable = ({
         case 'Lãnh đạo':
           return true;
         case 'Kiểm sát viên':
+          // return (
+          //   application.status === 'RESEARCHING'
+          //
+          // );
           return (
-            application.status === 'RESEARCHING' &&
-            application.acceptorId === user.id
+            application.status === 'PENDING' ||
+            (application.status === 'RESEARCHING' &&
+              application.acceptorId === user.id)
           );
         case 'Cán bộ tiếp dân':
           return application.status === 'PENDING';

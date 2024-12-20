@@ -743,11 +743,14 @@ export function getColumns({
                   Hành động
                 </DropdownMenuLabel>
 
-                {user?.publicMetadata.roleName === 'Cán bộ tiếp dân' && (
+                {(user?.publicMetadata.roleName === 'Cán bộ tiếp dân' ||
+                  user?.publicMetadata.roleName === 'Kiểm sát viên') && (
                   <DropdownMenuItem
                     className="flex items-center gap-3"
                     disabled={
-                      row.original.status === 'REPORTED' || isUpdatePending
+                      row.original.status === 'REPORTED' ||
+                      isUpdatePending ||
+                      row.original.status === 'RESEARCHING'
                     }
                     onSelect={() => {
                       setShowReportApplicationDialog(true);
@@ -832,7 +835,9 @@ export function getColumns({
                 {user?.publicMetadata.roleName === 'Kiểm sát viên' && (
                   <DropdownMenuItem
                     className="flex items-center gap-3"
-                    disabled={isUpdatePending}
+                    disabled={
+                      isUpdatePending || row.original.status === 'PENDING'
+                    }
                     onSelect={() => {
                       handleUpdateApplication({
                         status: 'COMPLETED',
